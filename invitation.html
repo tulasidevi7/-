@@ -838,9 +838,8 @@ footer{
 
       <div class="ph-frame groom">
         <div class="ph-img-wrap">
-          <img id="groomPhoto" class="ph-img" src="" alt="वर"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
-          <div class="ph-ph" id="groom-ph" style="display:none"><span>🌺</span><p id="groom-ph-name">वर</p></div>
+          <img id="groomPhoto" class="ph-img" alt="वर" style="display:none"/>
+          <div class="ph-ph" id="groom-ph" style="display:flex"><span>🌺</span><p id="groom-ph-name">वर</p></div>
         </div>
         <p class="ph-lbl">
           <span class="ph-role">वर</span>
@@ -850,9 +849,8 @@ footer{
 
       <div class="ph-frame bride">
         <div class="ph-img-wrap">
-          <img id="bridePhoto" class="ph-img" src="" alt="वधू"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
-          <div class="ph-ph" id="bride-ph" style="display:none"><span>🌸</span><p id="bride-ph-name">वधू</p></div>
+          <img id="bridePhoto" class="ph-img" alt="वधू" style="display:none"/>
+          <div class="ph-ph" id="bride-ph" style="display:flex"><span>🌸</span><p id="bride-ph-name">वधू</p></div>
         </div>
         <p class="ph-lbl">
           <span class="ph-role">वधू</span>
@@ -1363,63 +1361,62 @@ function setHTML(id, html) {
 /* ── 5. Load photos ── */
 (function loadPhotos() {
   /*
-   * Photo loading priority:
-   *   1. groomPhotoURL / bridePhotoURL from marriage profile
-   *      (set in Admin Panel → जोडी tab → फोटो URL)
-   *      → works for ALL visitors including guests
-   *   2. localStorage base64 (save-photos.html tool)
-   *      → only works on the device where admin saved them
-   *
-   * If neither is available, styled placeholder is shown.
+   * Loads photo from:
+   *   1. Marriage profile URL (Admin Panel → जोडी tab → फोटो URL)
+   *      Works for ALL guests — must be a public URL (.jpg/.jpeg/.png etc.)
+   *   2. localStorage base64 (save-photos.html) — only on admin's own device
    */
-
   function loadOne(imgId, phId, profileURL, localStorageKey) {
     var img = document.getElementById(imgId);
     var ph  = document.getElementById(phId);
     if (!img) return;
 
-    // Collect candidate sources in priority order
+    // Remove any inline onerror that might interfere
+    img.removeAttribute('onerror');
+
+    // Build sources list in priority order
     var sources = [];
-    var profileSrc = (profileURL || '').trim();
-    var localSrc   = '';
-    try { localSrc = localStorage.getItem(localStorageKey) || ''; } catch(e){}
+    var u = (profileURL || '').trim();
+    if (u) sources.push(u);
+    try {
+      var ls = localStorage.getItem(localStorageKey);
+      if (ls && ls !== u) sources.push(ls);
+    } catch(e) {}
 
-    if (profileSrc) sources.push(profileSrc);
-    if (localSrc   && localSrc !== profileSrc) sources.push(localSrc);
-
-    if (sources.length === 0) {
-      // No photo at all
+    if (!sources.length) {
+      // nothing to try — show placeholder
       img.style.display = 'none';
-      if (ph) ph.style.display = 'flex';
+      if (ph) { ph.style.display = 'flex'; }
       return;
     }
 
     var idx = 0;
     function tryNext() {
       if (idx >= sources.length) {
-        // All sources failed
         img.style.display = 'none';
         if (ph) ph.style.display = 'flex';
         return;
       }
       var src = sources[idx++];
-      img.onerror = tryNext;
-      img.onload  = function() {
-        img.style.display = 'block';
+      img.onload = function() {
+        img.style.display  = 'block';
         if (ph) ph.style.display = 'none';
       };
-      img.src = src;
+      img.onerror = function() {
+        img.style.display = 'none';
+        tryNext();
+      };
+      img.src = src;   // ← set AFTER handlers so they're live when browser fires them
     }
+
+    // Start loading — show placeholder while loading
+    if (ph) ph.style.display = 'flex';
+    img.style.display = 'none';
     tryNext();
   }
 
-  // Read URLs from the active marriage profile
-  var groomURL = '';
-  var brideURL = '';
-  try {
-    if (M && M.groomPhotoURL) groomURL = M.groomPhotoURL;
-    if (M && M.bridePhotoURL) brideURL = M.bridePhotoURL;
-  } catch(e){}
+  var groomURL = (M && M.groomPhotoURL) ? String(M.groomPhotoURL).trim() : '';
+  var brideURL = (M && M.bridePhotoURL) ? String(M.bridePhotoURL).trim() : '';
 
   loadOne('groomPhoto', 'groom-ph', groomURL, 'wedding_groom_photo_v1');
   loadOne('bridePhoto',  'bride-ph', brideURL, 'wedding_bride_photo_v1');

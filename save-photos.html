@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>फोटो सेटअप — विवाह निमन्त्रणा</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans Devanagari','Segoe UI',sans-serif;background:#fdf6e9;color:#2c1a0e;min-height:100vh;padding:32px 16px}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:1.35rem;color:#5a0f1e;margin-bottom:4px;text-align:center}
+.sub{font-size:.82rem;color:#8b6040;text-align:center;margin-bottom:24px}
+.alert{
+  background:#fff8e1;border:1.5px solid #d4a017;border-radius:10px;
+  padding:14px 18px;margin-bottom:22px;font-size:.83rem;color:#5c3a1e;line-height:1.8;
+}
+.alert strong{color:#5a0f1e}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:500px){.cards{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:14px;padding:20px;border:1px solid #efe0b8;box-shadow:0 4px 14px rgba(90,15,30,.08)}
+.card h2{font-size:.95rem;color:#5a0f1e;margin-bottom:12px;text-align:center}
+.drop-zone{
+  border:2px dashed #d4a017;border-radius:10px;
+  padding:20px 10px;text-align:center;cursor:pointer;
+  background:#fdf6e9;transition:all .2s;margin-bottom:10px;
+  min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+}
+.drop-zone.drag-over{background:#fff3cd;border-color:#b8860b}
+.drop-zone input[type=file]{display:none}
+.drop-icon{font-size:2rem}
+.drop-text{font-size:.78rem;color:#8b6040}
+.preview-img{
+  width:100%;height:160px;object-fit:cover;object-position:top center;
+  border-radius:8px;display:none;margin-bottom:8px;
+  border:1.5px solid #efe0b8;
+}
+.status-line{font-size:.75rem;min-height:18px;text-align:center}
+.ok{color:#27ae60} .err{color:#c0392b} .info{color:#b8860b}
+.btn-save{
+  width:100%;padding:11px;background:#5a0f1e;color:#f0c040;
+  border:none;border-radius:8px;font-family:inherit;font-size:.88rem;
+  font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px;
+  display:none;
+}
+.btn-save:hover{background:#7b1c2e}
+.btn-apply{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,#5a0f1e,#7b1c2e);
+  color:#f0c040;border:none;border-radius:10px;
+  font-family:inherit;font-size:1rem;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 16px rgba(90,15,30,.28);
+  margin-bottom:14px;
+}
+.btn-apply:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(90,15,30,.35)}
+.btn-apply:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-goto{
+  width:100%;padding:11px;background:#d4a017;color:#2c1a0e;
+  border:none;border-radius:10px;font-family:inherit;font-size:.9rem;
+  font-weight:700;cursor:pointer;transition:all .2s;
+}
+.btn-goto:hover{background:#f0c040}
+.result-box{
+  background:#fff;border-radius:12px;padding:20px;text-align:center;
+  border:1.5px solid #d4a017;display:none;margin-bottom:16px;
+}
+.result-box p{font-size:.85rem;color:#5c3a1e;line-height:2}
+.check{font-size:1.5rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📸 फोटो सेटअप</h1>
+  <p class="sub">वर र वधूको फोटो छान्नुहोस् — website मा automatically देखिनेछ</p>
+
+  <div class="alert">
+    <strong>कसरी काम गर्छ?</strong><br/>
+    यहाँ फोटो छान्दा browser को local storage मा save हुन्छ।<br/>
+    एकपटक save गरेपछि <strong>invitation.html</strong> मा फोटो देखिनेछ।<br/>
+    Browser clear गरेमा पुनः यहाँ save गर्नुपर्छ।
+  </div>
+
+  <div class="cards">
+    <!-- BRIDE -->
+    <div class="card">
+      <h2>🌸 वधूको फोटो</h2>
+      <img id="bridePreview" class="preview-img"/>
+      <div class="drop-zone" id="brideZone">
+        <input type="file" id="brideFile" accept="image/*"/>
+        <div class="drop-icon">🖼️</div>
+        <div class="drop-text">क्लिक गर्नुहोस् वा<br/>फोटो यहाँ खिच्नुहोस्</div>
+      </div>
+      <p class="status-line" id="brideStatus"></p>
+      <button class="btn-save" id="brideSaveBtn">✓ Save गर्नुहोस्</button>
+    </div>
+
+    <!-- GROOM -->
+    <div class="card">
+      <h2>🌺 वरको फोटो</h2>
+      <img id="groomPreview" class="preview-img"/>
+      <div class="drop-zone" id="groomZone">
+        <input type="file" id="groomFile" accept="image/*"/>
+        <div class="drop-icon">🖼️</div>
+        <div class="drop-text">क्लिक गर्नुहोस् वा<br/>फोटो यहाँ खिच्नुहोस्</div>
+      </div>
+      <p class="status-line" id="groomStatus"></p>
+      <button class="btn-save" id="groomSaveBtn">✓ Save गर्नुहोस्</button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-box" id="resultBox">
+    <div class="check">✅</div>
+    <p id="resultText"></p>
+  </div>
+
+  <button class="btn-apply" id="btnApply" disabled>
+    📥 Website मा लागू गर्नुहोस्
+  </button>
+  <button class="btn-goto" id="btnGoto" onclick="window.location.href='index.html'">
+    → मुख्य पृष्ठमा जानुहोस्
+  </button>
+</div>
+
+<script>
+"use strict";
+
+const BRIDE_KEY = 'wedding_bride_photo_v1';
+const GROOM_KEY = 'wedding_groom_photo_v1';
+
+let brideData = null;
+let groomData = null;
+
+// Load existing
+function loadExisting(){
+  const b = localStorage.getItem(BRIDE_KEY);
+  const g = localStorage.getItem(GROOM_KEY);
+  if(b){
+    brideData = b;
+    showPreview('bridePreview','brideStatus',b,'वधूको फोटो पहिले नै save छ ✓');
+    document.getElementById('brideSaveBtn').style.display='block';
+    document.getElementById('brideSaveBtn').textContent = '✓ पुनः save गर्नुहोस्';
+  }
+  if(g){
+    groomData = g;
+    showPreview('groomPreview','groomStatus',g,'वरको फोटो पहिले नै save छ ✓');
+    document.getElementById('groomSaveBtn').style.display='block';
+    document.getElementById('groomSaveBtn').textContent = '✓ पुनः save गर्नुहोस्';
+  }
+  updateApplyBtn();
+}
+
+function showPreview(previewId, statusId, dataUrl, msg){
+  const img = document.getElementById(previewId);
+  img.src = dataUrl;
+  img.style.display = 'block';
+  const st = document.getElementById(statusId);
+  st.className = 'status-line ok';
+  st.textContent = msg;
+}
+
+function updateApplyBtn(){
+  const b = localStorage.getItem(BRIDE_KEY);
+  const g = localStorage.getItem(GROOM_KEY);
+  document.getElementById('btnApply').disabled = !(b && g);
+}
+
+function setupDrop(zoneId, fileId, previewId, statusId, saveId, storageKey, who){
+  const zone     = document.getElementById(zoneId);
+  const fileInput= document.getElementById(fileId);
+  const saveBtn  = document.getElementById(saveId);
+  let pending    = null;
+
+  zone.addEventListener('click', () => fileInput.click());
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0];
+    if(f && f.type.startsWith('image/')) processFile(f);
+  });
+
+  fileInput.addEventListener('change', () => {
+    const f = fileInput.files[0];
+    if(f) processFile(f);
+  });
+
+  function processFile(file){
+    const st = document.getElementById(statusId);
+    st.className = 'status-line info';
+    st.textContent = 'प्रशोधन गर्दै…';
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      pending = e.target.result;
+      // resize to max 800px to keep storage small
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxW = 800, maxH = 1000;
+        let w = img.width, h = img.height;
+        if(w > maxW){ h = Math.round(h * maxW / w); w = maxW; }
+        if(h > maxH){ w = Math.round(w * maxH / h); h = maxH; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        pending = canvas.toDataURL('image/jpeg', 0.85);
+        showPreview(previewId, statusId, pending, `फोटो तयार — Save गर्नुहोस्`);
+        saveBtn.style.display = 'block';
+        saveBtn.textContent = `✓ ${who}को फोटो Save गर्नुहोस्`;
+        if(who === 'वधू') brideData = pending;
+        else groomData = pending;
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  saveBtn.addEventListener('click', () => {
+    const data = (who === 'वधू') ? brideData : groomData;
+    if(!data) return;
+    try {
+      localStorage.setItem(storageKey, data);
+      const st = document.getElementById(statusId);
+      st.className = 'status-line ok';
+      st.textContent = `✓ ${who}को फोटो save भयो!`;
+      saveBtn.textContent = '✓ Save भयो';
+      updateApplyBtn();
+    } catch(e) {
+      const st = document.getElementById(statusId);
+      st.className = 'status-line err';
+      st.textContent = 'Storage full — सानो फोटो प्रयोग गर्नुहोस्।';
+    }
+  });
+}
+
+setupDrop('brideZone','brideFile','bridePreview','brideStatus','brideSaveBtn', BRIDE_KEY, 'वधू');
+setupDrop('groomZone','groomFile','groomPreview','groomStatus','groomSaveBtn', GROOM_KEY, 'वर');
+
+document.getElementById('btnApply').addEventListener('click', () => {
+  const b = localStorage.getItem(BRIDE_KEY);
+  const g = localStorage.getItem(GROOM_KEY);
+  if(!b || !g){ alert('पहिले दुवै फोटो save गर्नुहोस्।'); return; }
+
+  const rb = document.getElementById('resultBox');
+  rb.style.display = 'block';
+  document.getElementById('resultText').innerHTML =
+    'दुवै फोटो website मा लागू भयो।<br/><strong>निमन्त्रणा पृष्ठ खोल्न तयार छ।</strong>';
+  document.getElementById('btnGoto').style.display = 'block';
+  window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+});
+
+loadExisting();
+</script>
+</body>
+</html>

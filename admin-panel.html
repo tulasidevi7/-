@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>व्यवस्थापक — शुभ विवाह</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ════ RESET ════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --cream:#fdf6e9;--cream2:#f5e8cc;--cream3:#ede0b8;
+  --gold:#b8860b;--gold2:#d4a017;--gold3:#f0c040;
+  --maroon:#7b1c2e;--maroon2:#5a0f1e;--maroon3:#9e2535;
+  --red:#c0392b;--green:#1e7e34;--blue:#1a6eb0;
+  --white:#ffffff;--gray1:#f8f4ef;--gray2:#e8ddd0;
+  --text1:#2c1a0e;--text2:#5c3a1e;--text3:#8b6040;
+  --fb:'Noto Serif Devanagari',serif;
+  --fu:'Noto Sans Devanagari',sans-serif;
+}
+body{background:var(--cream);font-family:var(--fu);color:var(--text1);min-height:100vh}
+
+/* ════ LOGIN ════ */
+#loginOverlay{
+  position:fixed;inset:0;background:rgba(90,15,30,.88);
+  z-index:500;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.login-box{
+  background:var(--white);border-radius:16px;padding:44px 36px;
+  max-width:380px;width:92%;text-align:center;
+  box-shadow:0 24px 70px rgba(0,0,0,.32);position:relative;overflow:hidden;
+}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;
+  background:linear-gradient(90deg,var(--maroon2),var(--gold2),var(--maroon2))}
+.login-title{font-family:var(--fb);font-size:1.35rem;color:var(--maroon2);margin-bottom:5px}
+.login-sub{font-size:.8rem;color:var(--text3);margin-bottom:18px;line-height:1.6}
+.login-input{
+  width:100%;padding:12px 16px;
+  border:1.5px solid var(--cream3);border-radius:10px;
+  font-family:var(--fu);font-size:1.1rem;color:var(--text1);outline:none;
+  text-align:center;letter-spacing:.3em;margin-bottom:10px;transition:border .25s;
+}
+.login-input:focus{border-color:var(--gold2)}
+.login-err{font-size:.78rem;color:var(--red);min-height:18px;margin-bottom:8px;display:block}
+.login-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  color:var(--gold3);border:none;border-radius:10px;
+  font-family:var(--fu);font-size:.95rem;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(90,15,30,.28);
+}
+.login-btn:hover{transform:translateY(-1px)}
+
+/* ════ TOPBAR ════ */
+.topbar{
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  padding:0 20px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 12px rgba(0,0,0,.2);
+}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-title{font-family:var(--fb);font-size:1rem;color:var(--gold3)}
+.topbar-marriage-badge{
+  font-size:.72rem;padding:3px 10px;border-radius:12px;
+  background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);
+  max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.tb-link{
+  font-size:.76rem;color:rgba(255,255,255,.72);text-decoration:none;
+  padding:5px 11px;border:1px solid rgba(255,255,255,.22);border-radius:16px;transition:all .2s;
+}
+.tb-link:hover{color:var(--gold3);border-color:var(--gold)}
+.tb-logout{
+  font-size:.76rem;cursor:pointer;background:rgba(255,255,255,.1);
+  color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.22);
+  border-radius:16px;padding:5px 11px;transition:all .2s;
+}
+.tb-logout:hover{background:rgba(192,57,43,.4);color:var(--white)}
+
+/* ════ MAIN SHELL ════ */
+#mainContent{display:none}
+
+/* ════ SCREEN ROUTER ════ */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ════ MARRIAGES LIST SCREEN ════ */
+.marriages-screen{
+  max-width:860px;margin:0 auto;padding:28px 20px 80px;
+}
+.screen-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;margin-bottom:24px;
+}
+.screen-hdr-title{
+  font-family:var(--fb);font-size:1.25rem;color:var(--maroon2);
+}
+.btn-primary{
+  padding:11px 22px;
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  color:var(--gold3);border:none;border-radius:9px;
+  font-family:var(--fu);font-size:.88rem;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 14px rgba(90,15,30,.26);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(90,15,30,.32)}
+
+/* marriage profile cards */
+.marriages-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+.m-card{
+  background:var(--white);border-radius:14px;
+  border:1px solid var(--cream2);
+  box-shadow:0 4px 18px rgba(90,15,30,.08);
+  overflow:hidden;transition:transform .2s,box-shadow .2s;
+  position:relative;
+}
+.m-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(90,15,30,.14)}
+.m-card-top{
+  padding:22px 20px 14px;
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  position:relative;
+}
+.m-card-label{
+  font-family:var(--fb);font-size:1rem;color:var(--gold3);margin-bottom:5px;
+}
+.m-card-couple{
+  font-size:.82rem;color:rgba(255,255,255,.82);
+}
+.m-card-active-badge{
+  position:absolute;top:10px;right:10px;
+  font-size:.65rem;padding:2px 8px;border-radius:8px;
+  background:var(--gold3);color:var(--maroon2);font-weight:700;
+}
+.m-card-body{padding:14px 18px 18px}
+.m-card-meta{font-size:.75rem;color:var(--text3);margin-bottom:12px;line-height:1.6}
+.m-card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-card{
+  padding:7px 14px;border-radius:7px;font-family:var(--fu);font-size:.76rem;
+  font-weight:600;cursor:pointer;border:none;transition:all .2s;
+}
+.btn-manage{background:var(--maroon2);color:var(--gold3)}
+.btn-manage:hover{background:var(--maroon)}
+.btn-guests{background:var(--cream2);color:var(--text2)}
+.btn-guests:hover{background:var(--cream3)}
+.btn-activate{background:#e8f4e8;color:var(--green);border:1px solid #c3e6c3}
+.btn-activate:hover{background:#d4ecd4}
+.btn-del-card{background:#fff0f0;color:var(--red);border:1px solid #fcc}
+.btn-del-card:hover{background:#ffe0e0}
+.m-card-archived{opacity:.55}
+
+/* sub-account chips */
+.sub-chip{
+  display:inline-block;font-size:.68rem;padding:2px 8px;
+  border-radius:8px;background:rgba(26,110,176,.12);color:var(--blue);
+  margin-top:4px;
+}
+
+/* ════ MARRIAGE DETAIL SCREEN ════ */
+.detail-screen{max-width:900px;margin:0 auto;padding:24px 20px 80px}
+.detail-back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.82rem;color:var(--maroon);cursor:pointer;
+  margin-bottom:18px;padding:6px 12px;border-radius:7px;
+  border:1px solid var(--cream3);background:var(--white);transition:all .2s;
+}
+.detail-back:hover{background:var(--cream2)}
+
+/* tabs */
+.tabs-wrap{
+  background:var(--white);border-bottom:2px solid var(--cream2);
+  padding:0 4px;display:flex;gap:0;overflow-x:auto;
+  position:sticky;top:56px;z-index:90;
+  box-shadow:0 2px 8px rgba(90,15,30,.05);border-radius:0;
+}
+.tab-btn{
+  padding:13px 15px;font-family:var(--fu);font-size:.8rem;font-weight:600;
+  color:var(--text3);border:none;background:none;cursor:pointer;white-space:nowrap;
+  border-bottom:3px solid transparent;transition:all .2s;flex-shrink:0;
+}
+.tab-btn.active{color:var(--maroon2);border-bottom-color:var(--maroon2)}
+.tab-btn:hover{color:var(--maroon3)}
+
+/* panels */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ════ FORM COMPONENTS ════ */
+.sec-card{
+  background:var(--white);border-radius:14px;padding:26px 24px;margin-bottom:18px;
+  box-shadow:0 3px 14px rgba(90,15,30,.07);border:1px solid var(--cream2);
+  position:relative;overflow:hidden;
+}
+.sec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--maroon2),var(--gold2),var(--maroon2))}
+.sec-card-title{
+  font-family:var(--fb);font-size:.95rem;color:var(--maroon2);
+  margin-bottom:16px;display:flex;align-items:center;gap:7px;
+}
+.sec-card-title span{font-size:1.1rem}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
+.form-row-1{display:grid;grid-template-columns:1fr;gap:13px;margin-bottom:13px}
+@media(max-width:560px){.form-row{grid-template-columns:1fr}}
+.f-group{display:flex;flex-direction:column;gap:5px}
+.f-label{font-size:.74rem;color:var(--text3);letter-spacing:.1em;font-weight:600}
+.f-input,.f-textarea,.f-select{
+  padding:10px 13px;border:1.5px solid var(--cream3);border-radius:8px;
+  font-family:var(--fu);font-size:.9rem;color:var(--text1);
+  background:var(--cream);outline:none;transition:border .2s,box-shadow .2s;width:100%;
+}
+.f-input:focus,.f-textarea:focus,.f-select:focus{
+  border-color:var(--gold2);box-shadow:0 0 0 3px rgba(212,160,23,.13);
+}
+.f-textarea{resize:vertical;min-height:88px;line-height:1.7}
+
+.btn-save{
+  padding:11px 26px;
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  color:var(--gold3);border:none;border-radius:8px;
+  font-family:var(--fu);font-size:.88rem;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(90,15,30,.26);
+}
+.btn-save:hover{transform:translateY(-1px)}
+.btn-secondary{
+  padding:11px 20px;background:var(--cream2);color:var(--text2);
+  border:1px solid var(--cream3);border-radius:8px;
+  font-family:var(--fu);font-size:.86rem;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-secondary:hover{background:var(--cream3)}
+.btn-danger{
+  padding:11px 20px;background:#fff0f0;color:var(--red);
+  border:1px solid #fcc;border-radius:8px;
+  font-family:var(--fu);font-size:.86rem;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-danger:hover{background:#ffe0e0}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+
+/* color row */
+.color-row{display:flex;gap:9px;align-items:center}
+.color-row input[type=color]{
+  width:42px;height:36px;border:1.5px solid var(--cream3);
+  border-radius:6px;cursor:pointer;padding:2px;background:var(--cream);
+}
+.color-row .f-input{flex:1}
+
+/* ════ GUEST TABLE ════ */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:11px;margin-bottom:18px}
+.stat-card{background:var(--white);border-radius:11px;padding:18px 14px;text-align:center;
+  box-shadow:0 3px 12px rgba(90,15,30,.07);border:1px solid var(--cream2)}
+.stat-num{font-family:var(--fb);font-size:1.9rem;color:var(--maroon);display:block}
+.stat-lbl{font-size:.7rem;color:var(--text3);margin-top:3px}
+
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.search-inp{
+  flex:1;min-width:150px;padding:9px 12px;
+  border:1.5px solid var(--cream3);border-radius:8px;
+  font-family:var(--fu);font-size:.84rem;color:var(--text1);
+  outline:none;background:var(--white);transition:border .2s;
+}
+.search-inp:focus{border-color:var(--gold2)}
+.btn-sm{
+  padding:8px 13px;border-radius:7px;font-family:var(--fu);
+  font-size:.76rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;white-space:nowrap;
+}
+.btn-export{background:var(--gold2);color:var(--maroon2)}
+.btn-export:hover{background:var(--gold3)}
+.btn-refresh{background:var(--cream2);color:var(--text2)}
+.btn-clear{background:#fff0f0;color:var(--red)}
+
+.table-wrap{background:var(--white);border-radius:12px;overflow:hidden;
+  border:1px solid var(--cream2);box-shadow:0 3px 12px rgba(90,15,30,.07)}
+table{width:100%;border-collapse:collapse}
+thead{background:linear-gradient(135deg,var(--maroon2),var(--maroon))}
+th{padding:11px 12px;text-align:left;font-size:.72rem;color:var(--gold3);letter-spacing:.1em;font-weight:600}
+td{padding:11px 12px;font-size:.8rem;color:var(--text1);border-bottom:1px solid var(--cream2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray1)}
+.badge{display:inline-block;padding:3px 9px;border-radius:18px;font-size:.68rem;font-weight:600}
+.badge-viewed{background:#d4edda;color:#155724}
+.badge-sent{background:#fff3cd;color:#856404}
+.del-btn{background:none;border:1px solid var(--cream3);border-radius:6px;
+  padding:4px 8px;cursor:pointer;font-size:.72rem;color:var(--red);transition:all .2s}
+.del-btn:hover{background:var(--red);color:var(--white);border-color:var(--red)}
+.link-copy-btn{
+  background:rgba(26,110,176,.08);border:1px solid rgba(26,110,176,.25);
+  border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.82rem;
+  transition:all .2s;color:var(--blue,#1a6eb0);
+}
+.link-copy-btn:hover{background:rgba(26,110,176,.18)}
+.empty-state{padding:44px 16px;text-align:center;color:var(--text3);font-size:.86rem;line-height:1.9}
+.empty-state span{font-size:2rem;display:block;margin-bottom:10px}
+.pagination{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.pg-btn{padding:6px 12px;border-radius:7px;border:1px solid var(--cream2);
+  background:var(--white);font-family:var(--fu);font-size:.76rem;color:var(--text2);cursor:pointer;transition:all .2s}
+.pg-btn:hover,.pg-btn.active{background:var(--maroon);color:var(--white);border-color:var(--maroon)}
+
+/* ════ SUB-ACCOUNTS PANEL ════ */
+.account-list{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.account-item{
+  background:var(--cream);border:1px solid var(--cream3);border-radius:10px;
+  padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.account-info{flex:1}
+.account-name{font-family:var(--fb);font-size:.9rem;color:var(--text1)}
+.account-meta{font-size:.72rem;color:var(--text3);margin-top:2px}
+.account-del{background:none;border:1px solid #fcc;border-radius:6px;padding:5px 10px;
+  cursor:pointer;font-size:.74rem;color:var(--red);transition:all .2s}
+.account-del:hover{background:var(--red);color:var(--white)}
+
+/* theme preview */
+.theme-preview{border-radius:8px;overflow:hidden;border:1px solid var(--cream3);margin-top:14px}
+.tp-bar{height:7px}
+.tp-body{padding:16px;text-align:center}
+.tp-title{font-family:var(--fb);font-size:1rem;margin-bottom:5px}
+.tp-sub{font-size:.78rem}
+
+/* ════ TOAST ════ */
+#toast{
+  position:fixed;bottom:22px;right:22px;
+  background:var(--maroon2);color:var(--gold3);
+  padding:11px 20px;border-radius:9px;font-family:var(--fu);font-size:.84rem;
+  opacity:0;transform:translateY(10px);transition:all .3s;
+  pointer-events:none;z-index:600;box-shadow:0 6px 20px rgba(0,0,0,.2);
+}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.success{background:var(--green)}
+#toast.error{background:var(--red)}
+
+/* ════ MODAL ════ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:400;display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);padding:16px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--white);border-radius:14px;padding:36px 30px;
+  max-width:480px;width:100%;
+  box-shadow:0 24px 60px rgba(0,0,0,.28);
+  position:relative;overflow:hidden;
+}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--maroon2),var(--gold2),var(--maroon2))}
+.modal-title{font-family:var(--fb);font-size:1.1rem;color:var(--maroon2);margin-bottom:20px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+
+/* ════ RESPONSIVE ════ */
+@media(max-width:580px){
+  .detail-screen,.marriages-screen{padding:16px 10px 60px}
+  th,td{padding:8px 8px;font-size:.74rem}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .btn-sm{width:100%}
+  .tabs-wrap{padding:0}
+  .tab-btn{padding:11px 9px;font-size:.74rem}
+  .m-card-actions{flex-direction:column}
+  .btn-card{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <p class="login-title">⚙ व्यवस्थापक</p>
+    <p class="login-sub">
+      मुख्य admin वा sub-account<br/>पासवर्ड प्रविष्ट गर्नुहोस्
+    </p>
+    <input type="password" id="pwInput" class="login-input"
+      placeholder="••••••" maxlength="40" autocomplete="current-password"/>
+    <span class="login-err" id="pwErr"></span>
+    <button class="login-btn" id="loginBtn">प्रवेश गर्नुहोस्</button>
+  </div>
+</div>
+
+<!-- ════ TOPBAR ════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-title">⚙ व्यवस्थापक</span>
+    <span class="topbar-marriage-badge" id="topMarriageBadge" style="display:none"></span>
+  </div>
+  <div class="topbar-right">
+    <a href="index.html" target="_blank" class="tb-link">← मुख्य पृष्ठ</a>
+    <button class="tb-logout" id="btnLogout">बाहिर जानुहोस्</button>
+  </div>
+</div>
+
+<!-- ════ MAIN ════ -->
+<div id="mainContent">
+
+  <!-- ══ SCREEN 1: MARRIAGES LIST ══ -->
+  <div class="screen active" id="screenMarriages">
+    <div class="marriages-screen">
+      <div class="screen-hdr">
+        <div>
+          <div class="screen-hdr-title">💒 विवाह व्यवस्थापन</div>
+          <div style="font-size:.78rem;color:var(--text3);margin-top:3px;" id="roleInfo"></div>
+        </div>
+        <button class="btn-primary" id="btnNewMarriage">+ नयाँ विवाह थप्नुहोस्</button>
+      </div>
+      <div class="marriages-grid" id="marriagesGrid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SCREEN 2: MARRIAGE DETAIL ══ -->
+  <div class="screen" id="screenDetail">
+    <div class="detail-screen">
+      <button class="detail-back" id="btnBack">← सबै विवाह हेर्नुहोस्</button>
+
+      <!-- tabs -->
+      <div class="tabs-wrap">
+        <button class="tab-btn active" data-panel="p-guests">👥 अतिथि</button>
+        <button class="tab-btn" data-panel="p-couple">💑 जोडी</button>
+        <button class="tab-btn" data-panel="p-parents">🏠 परिवार</button>
+        <button class="tab-btn" data-panel="p-venue">📍 स्थान</button>
+        <button class="tab-btn" data-panel="p-datetime">🗓 मिति</button>
+        <button class="tab-btn" data-panel="p-content">📝 सामग्री</button>
+        <button class="tab-btn" data-panel="p-theme">🎨 थिम</button>
+        <button class="tab-btn" data-panel="p-accounts">🔑 Sub-accounts</button>
+      </div>
+
+      <!-- ── guests ── -->
+      <div class="panel active" id="p-guests">
+        <br/>
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card"><span class="stat-num" id="stTotal">०</span><div class="stat-lbl">कुल अतिथि</div></div>
+          <div class="stat-card"><span class="stat-num" id="stViewed">०</span><div class="stat-lbl">हेरिसकेका</div></div>
+          <div class="stat-card"><span class="stat-num" id="stPending">०</span><div class="stat-lbl">नहेरेका</div></div>
+          <div class="stat-card"><span class="stat-num" id="stToday">०</span><div class="stat-lbl">आजका</div></div>
+        </div>
+        <div class="toolbar">
+          <input class="search-inp" id="searchInp" placeholder="🔍 नाम खोज्नुहोस्…"/>
+          <button class="btn-sm btn-refresh" id="btnRefresh">↻ ताजा</button>
+          <button class="btn-sm btn-export" id="btnExport">⬇ CSV</button>
+          <button class="btn-sm btn-clear" id="btnClearGuests">🗑 सबै मेट्नुहोस्</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th><th>अतिथिको नाम</th><th>परिवार</th>
+                <th>विवाह मिति</th><th>प्रतिभोज मिति</th>
+                <th>उत्पन्न</th><th>अवस्था</th><th>हेरेको</th>
+                <th>लिंक</th><th>कार्य</th>
+              </tr>
+            </thead>
+            <tbody id="guestBody"></tbody>
+          </table>
+      <div id="emptyState" class="empty-state" style="display:none">
+        <span>📋</span>कुनै अतिथि भेटिएन।<br/>
+        <span style="font-size:.78rem;color:var(--text3);">मुख्य पृष्ठबाट नाम लेखेर निमन्त्रणा तयार गर्नुभयो भने यहाँ देखिन्छ।<br/>
+        यो विवाह <strong>सक्रिय</strong> छ कि छैन जाँच्नुहोस् (विवाह कार्डमा "सक्रिय" हुनुपर्छ)।</span>
+      </div>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+
+      <!-- ── couple ── -->
+      <div class="panel" id="p-couple">
+        <br/>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>💑</span> वर–वधूको नाम</div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">विवाह पहिचान (label)</label>
+              <input class="f-input" id="m-label" placeholder="प्रजेम्स ❤ पुजा"/></div>
+            <div class="f-group"></div>
+            <div class="f-group"><label class="f-label">वरको नाम</label>
+              <input class="f-input" id="m-groomName" placeholder="प्रजेम्स श्रेष्ठ"/></div>
+            <div class="f-group"><label class="f-label">वधूको नाम</label>
+              <input class="f-input" id="m-brideName" placeholder="पुजा श्रेष्ठ"/></div>
+          </div>
+          <div class="btn-row"><button class="btn-save" data-save="couple">✓ Save गर्नुहोस्</button></div>
+        </div>
+      </div>
+
+      <!-- ── parents ── -->
+      <div class="panel" id="p-parents">
+        <br/>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>👨‍👩‍👦</span> वर पक्ष — अभिभावक</div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">वरका बाबुको नाम</label>
+              <input class="f-input" id="m-groomFatherName"/></div>
+            <div class="f-group"><label class="f-label">वरकी आमाको नाम</label>
+              <input class="f-input" id="m-groomMotherName"/></div>
+          </div>
+          <div class="form-row-1">
+            <div class="f-group"><label class="f-label">वरका हजुरबाबु/हजुरआमा विवरण</label>
+              <textarea class="f-textarea" id="m-groomGrandpaDesc"></textarea></div>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>👨‍👩‍👧</span> वधू पक्ष — अभिभावक</div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">वधूका बाबुको नाम</label>
+              <input class="f-input" id="m-brideFatherName"/></div>
+            <div class="f-group"><label class="f-label">वधूकी आमाको नाम</label>
+              <input class="f-input" id="m-brideMotherName"/></div>
+          </div>
+          <div class="form-row-1">
+            <div class="f-group"><label class="f-label">वधूका हजुरबाबु/हजुरआमा विवरण</label>
+              <textarea class="f-textarea" id="m-brideGrandpaDesc"></textarea></div>
+          </div>
+          <div class="btn-row"><button class="btn-save" data-save="parents">✓ Save गर्नुहोस्</button></div>
+        </div>
+      </div>
+
+      <!-- ── venue ── -->
+      <div class="panel" id="p-venue">
+        <br/>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>📍</span> विवाह स्थल</div>
+          <div class="form-row-1">
+            <div class="f-group"><label class="f-label">स्थलको नाम</label>
+              <input class="f-input" id="m-venueName"/></div>
+            <div class="f-group"><label class="f-label">ठेगाना</label>
+              <input class="f-input" id="m-venueAddress"/></div>
+            <div class="f-group"><label class="f-label">Google Maps Link</label>
+              <input type="url" class="f-input" id="m-mapsURL"/></div>
+            <div class="f-group"><label class="f-label">सम्पर्क नम्बर</label>
+              <input class="f-input" id="m-phone"/></div>
+          </div>
+          <div class="btn-row"><button class="btn-save" data-save="venue">✓ Save गर्नुहोस्</button></div>
+        </div>
+      </div>
+
+      <!-- ── datetime ── -->
+      <div class="panel" id="p-datetime">
+        <br/>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>🕯️</span> शुभ विवाह मिति</div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">मिति (नेपाली)</label>
+              <input class="f-input" id="m-weddingDateNepali" placeholder="मंसिर १९, २०८३"/></div>
+            <div class="f-group"><label class="f-label">मिति (AD — countdown)</label>
+              <input type="date" class="f-input" id="m-weddingDateEN"/></div>
+            <div class="f-group"><label class="f-label">समय (नेपाली)</label>
+              <input class="f-input" id="m-weddingTime" placeholder="बिहान ९:०० बजे"/></div>
+            <div class="f-group"><label class="f-label">समय (24h)</label>
+              <input type="time" class="f-input" id="m-weddingTimeEN"/></div>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>🎊</span> प्रतिभोज मिति</div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">मिति (नेपाली)</label>
+              <input class="f-input" id="m-receptionDateNepali" placeholder="मंसिर २०, २०८३"/></div>
+            <div class="f-group"><label class="f-label">समय (नेपाली)</label>
+              <input class="f-input" id="m-receptionTime" placeholder="दिउँसो २:०० बजे"/></div>
+          </div>
+          <div class="btn-row"><button class="btn-save" data-save="datetime">✓ Save गर्नुहोस्</button></div>
+        </div>
+      </div>
+
+      <!-- ── content ── -->
+      <div class="panel" id="p-content">
+        <br/>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>💬</span> Quote</div>
+          <div class="form-row-1">
+            <div class="f-group"><label class="f-label">Quote</label>
+              <input class="f-input" id="m-quote"/></div>
+          </div>
+          <div class="btn-row"><button class="btn-save" data-save="quote">✓ Save</button></div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>📄</span> Hero Tagline</div>
+          <div class="form-row-1">
+            <div class="f-group"><textarea class="f-textarea" id="m-heroTagline"></textarea></div>
+          </div>
+          <div class="btn-row"><button class="btn-save" data-save="tagline">✓ Save</button></div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>✉️</span> निमन्त्रणा अनुच्छेद</div>
+          <div class="form-row-1">
+            <div class="f-group"><textarea class="f-textarea" id="m-invitationPara" style="min-height:120px"></textarea></div>
+          </div>
+          <div class="btn-row"><button class="btn-save" data-save="para">✓ Save</button></div>
+        </div>
+      </div>
+
+      <!-- ── theme ── -->
+      <div class="panel" id="p-theme">
+        <br/>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>🎨</span> रंग तथा थिम</div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">मुख्य रंग (Maroon)</label>
+              <div class="color-row">
+                <input type="color" id="m-primaryColor"/>
+                <input class="f-input" id="m-primaryColorTxt" placeholder="#5a0f1e"/>
+              </div>
+            </div>
+            <div class="f-group"><label class="f-label">सजावट रंग (Gold)</label>
+              <div class="color-row">
+                <input type="color" id="m-accentColor"/>
+                <input class="f-input" id="m-accentColorTxt" placeholder="#d4a017"/>
+              </div>
+            </div>
+            <div class="f-group"><label class="f-label">पृष्ठभूमि रंग</label>
+              <div class="color-row">
+                <input type="color" id="m-bgColor"/>
+                <input class="f-input" id="m-bgColorTxt" placeholder="#fdf6e9"/>
+              </div>
+            </div>
+            <div class="f-group"><label class="f-label">थिम शैली</label>
+              <select class="f-select" id="m-themeStyle">
+                <option value="newari">नेवारी परम्परागत</option>
+                <option value="modern">आधुनिक</option>
+                <option value="classic">क्लासिक</option>
+              </select>
+            </div>
+          </div>
+          <div class="theme-preview">
+            <div class="tp-bar" id="tp-bar"></div>
+            <div class="tp-body" id="tp-body">
+              <div class="tp-title" id="tp-title">शुभ विवाह</div>
+              <div class="tp-sub"  id="tp-sub">वर ❤️ वधू</div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-save" data-save="theme">✓ Save</button>
+            <button class="btn-secondary" id="btnResetTheme">↺ Default</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── sub-accounts ── -->
+      <div class="panel" id="p-accounts">
+        <br/>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>🔑</span> नयाँ Sub-account बनाउनुहोस्</div>
+          <div class="form-row">
+            <div class="f-group"><label class="f-label">Sub-account नाम / विवरण</label>
+              <input class="f-input" id="sa-label" placeholder="उदा: फोटोग्राफर, परिवार"/></div>
+            <div class="f-group"><label class="f-label">पासवर्ड</label>
+              <input type="password" class="f-input" id="sa-password" placeholder="••••••"/></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-save" id="btnCreateSA">+ Sub-account बनाउनुहोस्</button>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-title"><span>👤</span> मौजुदा Sub-accounts</div>
+          <div class="account-list" id="accountList">
+            <div style="font-size:.82rem;color:var(--text3);">कुनै sub-account छैन।</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /detail-screen -->
+  </div><!-- /screenDetail -->
+
+</div><!-- /mainContent -->
+
+<!-- ════ NEW MARRIAGE MODAL ════ -->
+<div class="modal-overlay" id="newMarriageModal">
+  <div class="modal">
+    <div class="modal-title">+ नयाँ विवाह थप्नुहोस्</div>
+    <div class="f-group" style="margin-bottom:14px">
+      <label class="f-label">विवाह पहिचान नाम</label>
+      <input class="f-input" id="nm-label" placeholder="उदा: प्रजेम्स ❤ पुजा"/>
+    </div>
+    <div class="form-row">
+      <div class="f-group"><label class="f-label">वरको नाम</label>
+        <input class="f-input" id="nm-groom" placeholder="वरको नाम"/></div>
+      <div class="f-group"><label class="f-label">वधूको नाम</label>
+        <input class="f-input" id="nm-bride" placeholder="वधूको नाम"/></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="btnCancelNewM">रद्द</button>
+      <button class="btn-primary" id="btnConfirmNewM">✓ बनाउनुहोस्</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script src="marriages.js"></script>
+<script>
+"use strict";
+
+/* ════ HELPERS ════ */
+const $ = id => document.getElementById(id);
+const toNep = n => String(n).replace(/[0-9]/g, d=>'०१२३४५६७८९'[d]);
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(iso){ if(!iso)return'—'; const d=new Date(iso); return d.toLocaleDateString('ne-NP',{year:'numeric',month:'short',day:'numeric'})+' '+d.toLocaleTimeString('ne-NP',{hour:'2-digit',minute:'2-digit'}); }
+function isToday(iso){ if(!iso)return false; const d=new Date(iso),n=new Date(); return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate(); }
+function showToast(msg,type='',dur=2800){
+  const t=$('toast');t.textContent=msg;t.className='show '+(type||'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',dur);
+}
+
+/* ════ SESSION STATE ════ */
+let session = { role: null, marriageId: null };
+let currentMarriageId = null;
+let allGuests = [], filteredGuests = [], gPage = 1;
+const PER = 20;
+
+/* ════ LOGIN ════ */
+$('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn').click();});
+$('loginBtn').addEventListener('click',()=>{
+  const pw = $('pwInput').value;
+  const result = AccountDB.verify(pw);
+  if(!result){ $('pwErr').textContent='गलत पासवर्ड।'; $('pwInput').value=''; $('pwInput').focus(); return; }
+  $('loginOverlay').style.display='none';
+  $('mainContent').style.display='block';
+  session = result;
+  onLogin();
+});
+$('btnLogout').addEventListener('click',()=>{ window.location.reload(); });
+
+function onLogin(){
+  if(session.role==='sub'){
+    // sub-account: go directly to their marriage detail
+    $('roleInfo').textContent='Sub-account — '+session.label;
+    $('btnNewMarriage').style.display='none';
+    showDetail(session.marriageId);
+  } else {
+    $('roleInfo').textContent='मुख्य व्यवस्थापक';
+    renderMarriagesList();
+    showScreen('screenMarriages');
+  }
+}
+
+/* ════ SCREENS ════ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+/* ════ MARRIAGES LIST ════ */
+function renderMarriagesList(){
+  const marriages = MarriageDB.getAll();
+  const activeId  = localStorage.getItem('wms_active_marriage');
+  const grid = $('marriagesGrid');
+  grid.innerHTML = '';
+
+  if(!marriages.length){
+    grid.innerHTML='<div style="color:var(--text3);font-size:.88rem;padding:20px;">कुनै विवाह छैन। माथिको बटन थिचेर थप्नुहोस्।</div>';
+    return;
+  }
+
+  marriages.forEach(mh => {
+    const m   = MarriageDB.get(mh.marriageId);
+    const isA = mh.marriageId === activeId;
+    const guests = GuestDBMulti.getAll ? null : null; // count shown async below
+
+    const card = document.createElement('div');
+    card.className = 'm-card' + (mh.archived?' m-card-archived':'');
+    card.innerHTML = `
+      <div class="m-card-top">
+        <div class="m-card-label">${esc(m.label||'—')}</div>
+        <div class="m-card-couple">${esc(m.groomName||'')} ❤️ ${esc(m.brideName||'')}</div>
+        ${isA?'<span class="m-card-active-badge">सक्रिय</span>':''}
+      </div>
+      <div class="m-card-body">
+        <div class="m-card-meta">
+          🗓 ${esc(m.weddingDateNepali||'—')}<br/>
+          📍 ${esc(m.venueName||'—')}
+        </div>
+        <div class="m-card-actions">
+          <button class="btn-card btn-manage" data-id="${mh.marriageId}">⚙ व्यवस्थापन</button>
+          <button class="btn-card btn-guests" data-id="${mh.marriageId}">👥 अतिथि</button>
+          ${!isA?`<button class="btn-card btn-activate" data-id="${mh.marriageId}">✓ सक्रिय</button>`:''}
+          ${mh.archived
+            ? `<button class="btn-card btn-del-card" data-id="${mh.marriageId}" data-action="unarchive">↺ Restore</button>`
+            : `<button class="btn-card btn-del-card" data-id="${mh.marriageId}" data-action="archive">📁 Archive</button>`}
+          <button class="btn-card btn-delete-marriage" data-id="${mh.marriageId}" style="background:#fff0f0;color:var(--red);border:1px solid #fcc;">🗑 मेट्नुहोस्</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // bind events
+  grid.querySelectorAll('.btn-manage').forEach(b=>b.addEventListener('click',()=>showDetail(b.dataset.id)));
+  grid.querySelectorAll('.btn-guests').forEach(b=>b.addEventListener('click',()=>showDetail(b.dataset.id,'p-guests')));
+  grid.querySelectorAll('.btn-activate').forEach(b=>b.addEventListener('click',()=>{
+    MarriageDB.setActive(b.dataset.id);
+    showToast('✓ सक्रिय विवाह परिवर्तन गरियो।','success');
+    renderMarriagesList();
+  }));
+  grid.querySelectorAll('.btn-del-card').forEach(b=>b.addEventListener('click',()=>{
+    const action = b.dataset.action;
+    if(action==='archive'){
+      if(!confirm('यो विवाह archive गर्ने?')) return;
+      MarriageDB.setArchived(b.dataset.id,true);
+      showToast('Archive गरियो।');
+      renderMarriagesList();
+    } else {
+      MarriageDB.setArchived(b.dataset.id,false);
+      showToast('Restore गरियो।','success');
+      renderMarriagesList();
+    }
+  }));
+
+  // Permanent delete
+  grid.querySelectorAll('.btn-delete-marriage').forEach(b=>b.addEventListener('click',()=>{
+    const id = b.dataset.id;
+    const m  = MarriageDB.get(id);
+    const label = m ? m.label : 'यो विवाह';
+    if(!confirm('"' + label + '" पूर्ण रूपमा मेट्ने?\n\nयो कार्य पूर्ववत् हुँदैन — सबै अतिथि डेटा पनि मेटिनेछ।')) return;
+    // If deleting the active marriage, clear active
+    if(localStorage.getItem('wms_active_marriage') === id){
+      localStorage.removeItem('wms_active_marriage');
+    }
+    MarriageDB.delete(id);
+    showToast('✓ विवाह मेटाइयो।','success');
+    renderMarriagesList();
+  }));
+}
+
+/* ════ MARRIAGE DETAIL ════ */
+function showDetail(marriageId, tabId){
+  currentMarriageId = marriageId;
+  const m = MarriageDB.get(marriageId);
+  if(!m){ showToast('विवाह भेटिएन।','error'); return; }
+
+  // update topbar badge
+  $('topMarriageBadge').textContent = m.label || '';
+  $('topMarriageBadge').style.display = 'inline-block';
+
+  showScreen('screenDetail');
+
+  // activate tab
+  const targetTab = tabId || 'p-guests';
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.panel===targetTab);
+  });
+  document.querySelectorAll('.panel').forEach(p=>{
+    p.classList.toggle('active', p.id===targetTab);
+  });
+
+  loadFormData(m);
+  loadGuestData(marriageId);
+  loadAccounts(marriageId);
+}
+
+$('btnBack').addEventListener('click',()=>{
+  currentMarriageId=null;
+  $('topMarriageBadge').style.display='none';
+  renderMarriagesList();
+  showScreen('screenMarriages');
+});
+
+/* ── TABS ── */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    $(btn.dataset.panel).classList.add('active');
+    if(btn.dataset.panel==='p-guests' && currentMarriageId) loadGuestData(currentMarriageId);
+    if(btn.dataset.panel==='p-accounts' && currentMarriageId) loadAccounts(currentMarriageId);
+  });
+});
+
+/* ════ FORM DATA LOAD / SAVE ════ */
+const FIELD_MAP = {
+  'label':'m-label','groomName':'m-groomName','brideName':'m-brideName',
+  'groomFatherName':'m-groomFatherName','groomMotherName':'m-groomMotherName','groomGrandpaDesc':'m-groomGrandpaDesc',
+  'brideFatherName':'m-brideFatherName','brideMotherName':'m-brideMotherName','brideGrandpaDesc':'m-brideGrandpaDesc',
+  'venueName':'m-venueName','venueAddress':'m-venueAddress','mapsURL':'m-mapsURL','phone':'m-phone',
+  'weddingDateNepali':'m-weddingDateNepali','weddingDateEN':'m-weddingDateEN',
+  'weddingTime':'m-weddingTime','weddingTimeEN':'m-weddingTimeEN',
+  'receptionDateNepali':'m-receptionDateNepali','receptionTime':'m-receptionTime',
+  'quote':'m-quote','heroTagline':'m-heroTagline','invitationPara':'m-invitationPara',
+  'themeStyle':'m-themeStyle','primaryColor':'m-primaryColorTxt',
+  'accentColor':'m-accentColorTxt','bgColor':'m-bgColorTxt',
+};
+function loadFormData(m){
+  Object.entries(FIELD_MAP).forEach(([key,elId])=>{
+    const el=$(elId); if(el&&m[key]!=null) el.value=m[key];
+  });
+  // color pickers
+  [['m-primaryColor','primaryColor'],['m-accentColor','accentColor'],['m-bgColor','bgColor']].forEach(([pid,key])=>{
+    const el=$(pid); if(el&&m[key]&&/^#[0-9a-f]{6}$/i.test(m[key])) el.value=m[key];
+  });
+  updateThemePreview();
+}
+
+const SAVE_GROUPS = {
+  couple:  ['label','groomName','brideName'],
+  parents: ['groomFatherName','groomMotherName','groomGrandpaDesc','brideFatherName','brideMotherName','brideGrandpaDesc'],
+  venue:   ['venueName','venueAddress','mapsURL','phone'],
+  datetime:['weddingDateNepali','weddingDateEN','weddingTime','weddingTimeEN','receptionDateNepali','receptionTime'],
+  quote:   ['quote'],
+  tagline: ['heroTagline'],
+  para:    ['invitationPara'],
+  theme:   ['themeStyle','primaryColor','accentColor','bgColor'],
+};
+
+document.querySelectorAll('.btn-save[data-save]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(!currentMarriageId) return;
+    const keys = SAVE_GROUPS[btn.dataset.save];
+    if(!keys) return;
+    const updates = {};
+    Object.entries(FIELD_MAP).forEach(([key,elId])=>{
+      if(keys.includes(key)){ const el=$(elId); if(el) updates[key]=el.value.trim(); }
+    });
+    if(btn.dataset.save==='theme'){
+      updates.primaryColor = $('m-primaryColorTxt').value;
+      updates.accentColor  = $('m-accentColorTxt').value;
+      updates.bgColor      = $('m-bgColorTxt').value;
+    }
+    const result = MarriageDB.update(currentMarriageId, updates);
+    if(result){
+      showToast('✓ Save भयो।','success');
+      // also write to legacy wedding_site_config if this is active
+      if(localStorage.getItem('wms_active_marriage')===currentMarriageId){
+        try{ localStorage.setItem('wedding_site_config', JSON.stringify(result)); }catch(e){}
+      }
+    } else { showToast('Save गर्न समस्या।','error'); }
+  });
+});
+
+/* ── Color pickers ── */
+[['m-primaryColor','m-primaryColorTxt'],['m-accentColor','m-accentColorTxt'],['m-bgColor','m-bgColorTxt']].forEach(([pid,tid])=>{
+  const p=$(pid),t=$(tid);
+  if(!p||!t)return;
+  p.addEventListener('input',()=>{t.value=p.value;updateThemePreview();});
+  t.addEventListener('input',()=>{if(/^#[0-9a-f]{6}$/i.test(t.value)){p.value=t.value;updateThemePreview();}});
+});
+function updateThemePreview(){
+  const p=$('m-primaryColorTxt').value||'#5a0f1e';
+  const a=$('m-accentColorTxt').value||'#d4a017';
+  const b=$('m-bgColorTxt').value||'#fdf6e9';
+  $('tp-bar').style.background=`linear-gradient(90deg,${p},${a},${p})`;
+  $('tp-body').style.background=b;
+  $('tp-title').style.color=p;
+  $('tp-sub').style.color=a;
+}
+$('btnResetTheme').addEventListener('click',()=>{
+  [['m-primaryColor','#5a0f1e'],['m-accentColor','#d4a017'],['m-bgColor','#fdf6e9']].forEach(([id,v])=>{$(id).value=v;});
+  [['m-primaryColorTxt','#5a0f1e'],['m-accentColorTxt','#d4a017'],['m-bgColorTxt','#fdf6e9']].forEach(([id,v])=>{$(id).value=v;});
+  updateThemePreview();
+});
+
+/* ════ GUEST LIST ════ */
+async function loadGuestData(marriageId){
+  allGuests = await GuestDBMulti.getAll(marriageId);
+  allGuests.sort((a,b)=>new Date(b.generatedAt)-new Date(a.generatedAt));
+  renderStats();
+  applySearch();
+}
+function renderStats(){
+  const t=allGuests.length, v=allGuests.filter(g=>g.viewedAt).length;
+  $('stTotal').textContent=toNep(t); $('stViewed').textContent=toNep(v);
+  $('stPending').textContent=toNep(t-v);
+  $('stToday').textContent=toNep(allGuests.filter(g=>isToday(g.generatedAt)).length);
+}
+function applySearch(){
+  const q=$('searchInp').value.trim().toLowerCase();
+  filteredGuests=q?allGuests.filter(g=>g.name.toLowerCase().includes(q)):[...allGuests];
+  gPage=1; renderGuestTable(); renderPagination();
+}
+function renderGuestTable(){
+  const tbody=$('guestBody'); tbody.innerHTML='';
+  const es=$('emptyState');
+  if(!filteredGuests.length){es.style.display='block';renderPagination();return;}
+  es.style.display='none';
+  const start=(gPage-1)*PER;
+  filteredGuests.slice(start,start+PER).forEach((g,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${toNep(start+i+1)}</td>
+      <td><strong>${esc(g.name)}</strong>${g.count>1?` <span style="font-size:.65rem;color:var(--gold)">(${toNep(g.count)}x)</span>`:''}</td>
+      <td>${g.withFamily?'<span class="badge badge-viewed">सहित</span>':'—'}</td>
+      <td style="font-size:.72rem;color:var(--text3)">${(g.showWedding||g.weddingDate)?'<span class="badge badge-viewed">✓</span>':'—'}</td>
+      <td style="font-size:.72rem;color:var(--text3)">${(g.showReception||g.receptionDate)?'<span class="badge badge-viewed">✓</span>':'—'}</td>
+      <td style="font-size:.72rem;color:var(--text3)">${fmt(g.generatedAt)}</td>
+      <td>${g.viewedAt?'<span class="badge badge-viewed">✓ हेरियो</span>':'<span class="badge badge-sent">⏳</span>'}</td>
+      <td style="font-size:.7rem;color:var(--text3)">${g.viewedAt?fmt(g.viewedAt):'—'}</td>
+      <td>
+        ${g.invitationURL
+          ? `<button class="link-copy-btn" data-url="${esc(g.invitationURL)}" title="${esc(g.invitationURL)}">📋</button>`
+          : '<span style="color:var(--text3);font-size:.7rem;">—</span>'}
+      </td>
+      <td style="display:flex;gap:5px;flex-wrap:wrap;">
+        ${g.invitationURL
+          ? `<a href="${esc(g.invitationURL)}" target="_blank" class="del-btn" style="text-decoration:none;color:var(--blue,#1a6eb0);border-color:#c3d9f0">👁</a>`
+          : ''}
+        <button class="del-btn" data-id="${esc(g.id)}">🗑</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('.del-btn[data-id]').forEach(b=>{
+    b.addEventListener('click',async()=>{
+      if(!confirm('मेट्ने?'))return;
+      await GuestDBMulti.deleteGuest(currentMarriageId,b.dataset.id);
+      showToast('मेटाइयो।'); loadGuestData(currentMarriageId);
+    });
+  });
+  // copy link buttons
+  tbody.querySelectorAll('.link-copy-btn').forEach(b=>{
+    b.addEventListener('click',async()=>{
+      const url = b.dataset.url;
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          await navigator.clipboard.writeText(url);
+        } else {
+          const ta=document.createElement('textarea');ta.value=url;
+          ta.style.cssText='position:fixed;opacity:0';
+          document.body.appendChild(ta);ta.focus();ta.select();
+          document.execCommand('copy');document.body.removeChild(ta);
+        }
+        showToast('✓ लिंक कपी भयो।','success');
+      }catch(e){ showToast('कपी गर्न समस्या।','error'); }
+    });
+  });
+}
+function renderPagination(){
+  const pg=$('pagination'); pg.innerHTML='';
+  const total=Math.ceil(filteredGuests.length/PER);
+  if(total<=1)return;
+  for(let i=1;i<=total;i++){
+    const b=document.createElement('button');
+    b.className='pg-btn'+(i===gPage?' active':'');
+    b.textContent=toNep(i);
+    b.addEventListener('click',()=>{gPage=i;renderGuestTable();renderPagination();});
+    pg.appendChild(b);
+  }
+}
+$('searchInp').addEventListener('input',applySearch);
+$('btnRefresh').addEventListener('click',()=>{if(currentMarriageId)loadGuestData(currentMarriageId);showToast('ताजा गरियो।');});
+$('btnClearGuests').addEventListener('click',async()=>{
+  if(!confirm('सबै अतिथि मेट्ने?'))return;
+  await GuestDBMulti.clearAll(currentMarriageId);
+  showToast('सबै मेटाइयो।'); loadGuestData(currentMarriageId);
+});
+$('btnExport').addEventListener('click',async()=>{
+  if(!currentMarriageId)return;
+  const guests=await GuestDBMulti.getAll(currentMarriageId);
+  if(!guests.length){showToast('डेटा छैन।','error');return;}
+  const rows=[['नाम','परिवार','विवाह मिति','प्रतिभोज मिति','उत्पन्न','अवस्था','हेरेको']];
+  guests.forEach(g=>rows.push([
+    g.name, g.withFamily?'सहित':'',
+    g.weddingDate||(g.weddingDate||''), g.receptionDate||'',
+    g.generatedAt?new Date(g.generatedAt).toLocaleString('ne-NP'):'',
+    g.viewedAt?'हेरियो':'पर्खिँदै',
+    g.viewedAt?new Date(g.viewedAt).toLocaleString('ne-NP'):'',
+  ]));
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  const m=MarriageDB.get(currentMarriageId);
+  a.download=(m?m.label:'atithi')+'-list.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  showToast('CSV निर्यात भयो।','success');
+});
+
+/* ════ SUB-ACCOUNTS ════ */
+function loadAccounts(marriageId){
+  const all = AccountDB.getAll().filter(a=>a.marriageId===marriageId);
+  const list=$('accountList');
+  list.innerHTML='';
+  if(!all.length){
+    list.innerHTML='<div style="font-size:.82rem;color:var(--text3);">कुनै sub-account छैन।</div>';
+    return;
+  }
+  all.forEach(a=>{
+    const div=document.createElement('div');
+    div.className='account-item';
+    div.innerHTML=`
+      <div class="account-info">
+        <div class="account-name">🔑 ${esc(a.label)}</div>
+        <div class="account-meta">बनाइएको: ${fmt(a.createdAt)}</div>
+      </div>
+      <button class="account-del" data-id="${esc(a.id)}">मेट्नुहोस्</button>
+    `;
+    list.appendChild(div);
+  });
+  list.querySelectorAll('.account-del').forEach(b=>{
+    b.addEventListener('click',()=>{
+      if(!confirm('यो sub-account मेट्ने?'))return;
+      AccountDB.delete(b.dataset.id);
+      showToast('Sub-account मेटाइयो।');
+      loadAccounts(marriageId);
+    });
+  });
+}
+$('btnCreateSA').addEventListener('click',()=>{
+  if(!currentMarriageId)return;
+  const lbl=$('sa-label').value.trim();
+  const pw =$('sa-password').value.trim();
+  if(!lbl){showToast('नाम लेख्नुहोस्।','error');return;}
+  if(pw.length<4){showToast('पासवर्ड कम्तीमा ४ अक्षर।','error');return;}
+  // check duplicate password
+  const res=AccountDB.verify(pw);
+  if(res){showToast('यो पासवर्ड पहिले नै छ।','error');return;}
+  AccountDB.create(lbl,pw,currentMarriageId);
+  $('sa-label').value=''; $('sa-password').value='';
+  showToast('✓ Sub-account बनाइयो।','success');
+  loadAccounts(currentMarriageId);
+});
+
+/* ════ NEW MARRIAGE MODAL ════ */
+$('btnNewMarriage').addEventListener('click',()=>{
+  $('nm-label').value=''; $('nm-groom').value=''; $('nm-bride').value='';
+  $('newMarriageModal').classList.add('open');
+  $('nm-label').focus();
+});
+$('btnCancelNewM').addEventListener('click',()=>$('newMarriageModal').classList.remove('open'));
+$('btnConfirmNewM').addEventListener('click',()=>{
+  const label=($('nm-label').value.trim())||'नयाँ विवाह';
+  const groom=$('nm-groom').value.trim()||'वर';
+  const bride=$('nm-bride').value.trim()||'वधू';
+  const m=MarriageDB.create({label, groomName:groom, brideName:bride});
+  $('newMarriageModal').classList.remove('open');
+  showToast('✓ नयाँ विवाह बनाइयो।','success');
+  renderMarriagesList();
+  showDetail(m.marriageId,'p-couple');
+});
+// close modal on overlay click
+$('newMarriageModal').addEventListener('click',e=>{
+  if(e.target===$('newMarriageModal')) $('newMarriageModal').classList.remove('open');
+});
+</script>
+</body>
+</html>

@@ -218,10 +218,10 @@ body{background:var(--cream);font-family:var(--fb);color:var(--text1);overflow-x
 .ph-ph span{font-size:clamp(2rem,8vw,3rem)}
 .ph-ph p{font-family:var(--fh);font-size:clamp(.75rem,2.5vw,.9rem);text-align:center;padding:0 8px;color:var(--maroon);font-weight:600}
 .ph-heart{
-  /* centered on the photos-row container, vertically centered on the bottom edge of photos */
+  /* centered between the two photo frames — nudged slightly left */
   position:absolute;
-  left:50%;
-  bottom:36px;          /* hover above the bottom of the frames */
+  left:calc(50% - 8px);
+  bottom:36px;
   transform:translateX(-50%);
   z-index:20;
   width:44px;height:44px;
@@ -230,7 +230,6 @@ body{background:var(--cream);font-family:var(--fb);color:var(--text1);overflow-x
   font-size:1.25rem;
   animation:hb 1.6s ease-in-out infinite;
   box-shadow:0 4px 14px rgba(0,0,0,.35);
-  /* prevent pointer events blocking scroll */
   pointer-events:none;
 }
 .ph-lbl{
@@ -841,7 +840,7 @@ footer{
         <div class="ph-img-wrap">
           <img id="groomPhoto" class="ph-img" src="" alt="वर"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
-          <div class="ph-ph" style="display:none"><span>🌺</span><p id="groom-ph-name">वर</p></div>
+          <div class="ph-ph" id="groom-ph" style="display:none"><span>🌺</span><p id="groom-ph-name">वर</p></div>
         </div>
         <p class="ph-lbl">
           <span class="ph-role">वर</span>
@@ -853,7 +852,7 @@ footer{
         <div class="ph-img-wrap">
           <img id="bridePhoto" class="ph-img" src="" alt="वधू"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"/>
-          <div class="ph-ph" style="display:none"><span>🌸</span><p id="bride-ph-name">वधू</p></div>
+          <div class="ph-ph" id="bride-ph" style="display:none"><span>🌸</span><p id="bride-ph-name">वधू</p></div>
         </div>
         <p class="ph-lbl">
           <span class="ph-role">वधू</span>
@@ -1363,29 +1362,43 @@ function setHTML(id, html) {
 
 /* ── 5. Load photos ── */
 (function loadPhotos() {
-  function setPhoto(id, key) {
-    const el = document.getElementById(id);
+  // Priority 1: URL from Admin Panel (publicly hosted — works for all guests)
+  // Priority 2: localStorage base64 (admin's device only — fallback)
+  function setPhoto(imgId, placeholderId, profileURL, localKey) {
+    const el = document.getElementById(imgId);
+    const ph = document.getElementById(placeholderId);
     if (!el) return;
-    // Always show the img element (let onerror handle missing src)
-    el.style.display = 'block';
-    const ph = el.nextElementSibling; // placeholder div
 
-    const saved = localStorage.getItem(key);
-    if (saved) {
-      el.src = saved;
+    // Try Admin Panel URL first (visible to everyone)
+    const url = profileURL && profileURL.trim();
+    const local = localStorage.getItem(localKey);
+    const src = url || local || '';
+
+    if (src) {
+      el.src = src;
+      el.style.display = 'block';
       el.onload  = function() { if (ph) ph.style.display = 'none'; };
       el.onerror = function() {
-        el.style.display = 'none';
-        if (ph) ph.style.display = 'flex';
+        // URL failed — try localStorage fallback if not already tried
+        if (src !== local && local) {
+          el.src = local;
+        } else {
+          el.style.display = 'none';
+          if (ph) ph.style.display = 'flex';
+        }
       };
     } else {
-      // No saved photo — show placeholder
+      // No photo available — show placeholder with name
       el.style.display = 'none';
       if (ph) ph.style.display = 'flex';
     }
   }
-  setPhoto('groomPhoto', 'wedding_groom_photo_v1');
-  setPhoto('bridePhoto',  'wedding_bride_photo_v1');
+
+  const groomURL = M && M.groomPhotoURL ? M.groomPhotoURL : '';
+  const brideURL = M && M.bridePhotoURL ? M.bridePhotoURL : '';
+
+  setPhoto('groomPhoto', 'groom-ph', groomURL, 'wedding_groom_photo_v1');
+  setPhoto('bridePhoto', 'bride-ph', brideURL, 'wedding_bride_photo_v1');
 })();
 
 /* ── 6. Mark invitation viewed (records in Admin Panel guest list) ── */

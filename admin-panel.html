@@ -480,6 +480,25 @@ tr:hover td{background:var(--gray1)}
             <div class="f-group"><label class="f-label">वधूको नाम</label>
               <input class="f-input" id="m-brideName" placeholder="पुजा श्रेष्ठ"/></div>
           </div>
+
+          <!-- Photo URLs — publicly hosted so ALL guests can see -->
+          <div style="background:rgba(184,134,11,.07);border-radius:9px;padding:14px 16px;margin-top:4px;border:1px solid rgba(184,134,11,.2);">
+            <p style="font-family:var(--fu);font-size:.75rem;color:var(--text2);margin-bottom:12px;line-height:1.8;">
+              📸 <strong>फोटो URL</strong> — अतिथिले पनि देख्न सकून् भनेर publicly accessible image link राख्नुहोस्।<br/>
+              <span style="color:var(--gold);font-weight:600;">Imgur.com</span> मा upload गरेर direct link copy गर्नुहोस् (उदाहरण: <code style="font-size:.7rem;">https://i.imgur.com/abc123.jpg</code>)
+            </p>
+            <div class="form-row">
+              <div class="f-group">
+                <label class="f-label">🤵 वरको फोटो URL</label>
+                <input type="url" class="f-input" id="m-groomPhotoURL" placeholder="https://i.imgur.com/abc123.jpg"/>
+              </div>
+              <div class="f-group">
+                <label class="f-label">👗 वधूको फोटो URL</label>
+                <input type="url" class="f-input" id="m-bridePhotoURL" placeholder="https://i.imgur.com/xyz456.jpg"/>
+              </div>
+            </div>
+          </div>
+
           <div class="btn-row"><button class="btn-save" data-save="couple">✓ Save गर्नुहोस्</button></div>
         </div>
       </div>
@@ -871,6 +890,7 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 /* ════ FORM DATA LOAD / SAVE ════ */
 const FIELD_MAP = {
   'label':'m-label','groomName':'m-groomName','brideName':'m-brideName',
+  'groomPhotoURL':'m-groomPhotoURL','bridePhotoURL':'m-bridePhotoURL',
   'groomFatherName':'m-groomFatherName','groomMotherName':'m-groomMotherName','groomGrandpaDesc':'m-groomGrandpaDesc',
   'brideFatherName':'m-brideFatherName','brideMotherName':'m-brideMotherName','brideGrandpaDesc':'m-brideGrandpaDesc',
   'venueName':'m-venueName','venueAddress':'m-venueAddress','mapsURL':'m-mapsURL','phone':'m-phone',
@@ -893,7 +913,7 @@ function loadFormData(m){
 }
 
 const SAVE_GROUPS = {
-  couple:  ['label','groomName','brideName'],
+  couple:  ['label','groomName','brideName','groomPhotoURL','bridePhotoURL'],
   parents: ['groomFatherName','groomMotherName','groomGrandpaDesc','brideFatherName','brideMotherName','brideGrandpaDesc'],
   venue:   ['venueName','venueAddress','mapsURL','phone'],
   datetime:['weddingDateNepali','weddingDateEN','weddingTime','weddingTimeEN','receptionDateNepali','receptionTime'],

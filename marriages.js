@@ -47,6 +47,11 @@ function defaultMarriageData(overrides = {}) {
     groomName:        'प्रजेम्स श्रेष्ठ',
     brideName:        'पुजा श्रेष्ठ',
 
+    // फोटो URLs (publicly accessible — hosted image links)
+    // Admin Panel मा paste गर्नुहोस्: Google Drive, Cloudinary, Imgur, आदि
+    groomPhotoURL:    '',   // e.g. 'https://i.imgur.com/abc123.jpg'
+    bridePhotoURL:    '',   // e.g. 'https://drive.google.com/uc?id=...'
+
     // वर पक्ष
     groomFatherName:  'प्रेम कुमार श्रेष्ठ',
     groomMotherName:  'आशमाया श्रेष्ठ',

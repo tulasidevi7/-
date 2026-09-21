@@ -218,9 +218,9 @@ body{background:var(--cream);font-family:var(--fb);color:var(--text1);overflow-x
 .ph-ph span{font-size:clamp(2rem,8vw,3rem)}
 .ph-ph p{font-family:var(--fh);font-size:clamp(.75rem,2.5vw,.9rem);text-align:center;padding:0 8px;color:var(--maroon);font-weight:600}
 .ph-heart{
-  /* centered between the two photo frames — nudged slightly left */
+  /* between the two photo frames — nudged left to sit visually centered */
   position:absolute;
-  left:calc(50% - 8px);
+  left:calc(50% - 18px);
   bottom:36px;
   transform:translateX(-50%);
   z-index:20;
@@ -1362,43 +1362,67 @@ function setHTML(id, html) {
 
 /* ── 5. Load photos ── */
 (function loadPhotos() {
-  // Priority 1: URL from Admin Panel (publicly hosted — works for all guests)
-  // Priority 2: localStorage base64 (admin's device only — fallback)
-  function setPhoto(imgId, placeholderId, profileURL, localKey) {
-    const el = document.getElementById(imgId);
-    const ph = document.getElementById(placeholderId);
-    if (!el) return;
+  /*
+   * Photo loading priority:
+   *   1. groomPhotoURL / bridePhotoURL from marriage profile
+   *      (set in Admin Panel → जोडी tab → फोटो URL)
+   *      → works for ALL visitors including guests
+   *   2. localStorage base64 (save-photos.html tool)
+   *      → only works on the device where admin saved them
+   *
+   * If neither is available, styled placeholder is shown.
+   */
 
-    // Try Admin Panel URL first (visible to everyone)
-    const url = profileURL && profileURL.trim();
-    const local = localStorage.getItem(localKey);
-    const src = url || local || '';
+  function loadOne(imgId, phId, profileURL, localStorageKey) {
+    var img = document.getElementById(imgId);
+    var ph  = document.getElementById(phId);
+    if (!img) return;
 
-    if (src) {
-      el.src = src;
-      el.style.display = 'block';
-      el.onload  = function() { if (ph) ph.style.display = 'none'; };
-      el.onerror = function() {
-        // URL failed — try localStorage fallback if not already tried
-        if (src !== local && local) {
-          el.src = local;
-        } else {
-          el.style.display = 'none';
-          if (ph) ph.style.display = 'flex';
-        }
-      };
-    } else {
-      // No photo available — show placeholder with name
-      el.style.display = 'none';
+    // Collect candidate sources in priority order
+    var sources = [];
+    var profileSrc = (profileURL || '').trim();
+    var localSrc   = '';
+    try { localSrc = localStorage.getItem(localStorageKey) || ''; } catch(e){}
+
+    if (profileSrc) sources.push(profileSrc);
+    if (localSrc   && localSrc !== profileSrc) sources.push(localSrc);
+
+    if (sources.length === 0) {
+      // No photo at all
+      img.style.display = 'none';
       if (ph) ph.style.display = 'flex';
+      return;
     }
+
+    var idx = 0;
+    function tryNext() {
+      if (idx >= sources.length) {
+        // All sources failed
+        img.style.display = 'none';
+        if (ph) ph.style.display = 'flex';
+        return;
+      }
+      var src = sources[idx++];
+      img.onerror = tryNext;
+      img.onload  = function() {
+        img.style.display = 'block';
+        if (ph) ph.style.display = 'none';
+      };
+      img.src = src;
+    }
+    tryNext();
   }
 
-  const groomURL = M && M.groomPhotoURL ? M.groomPhotoURL : '';
-  const brideURL = M && M.bridePhotoURL ? M.bridePhotoURL : '';
+  // Read URLs from the active marriage profile
+  var groomURL = '';
+  var brideURL = '';
+  try {
+    if (M && M.groomPhotoURL) groomURL = M.groomPhotoURL;
+    if (M && M.bridePhotoURL) brideURL = M.bridePhotoURL;
+  } catch(e){}
 
-  setPhoto('groomPhoto', 'groom-ph', groomURL, 'wedding_groom_photo_v1');
-  setPhoto('bridePhoto', 'bride-ph', brideURL, 'wedding_bride_photo_v1');
+  loadOne('groomPhoto', 'groom-ph', groomURL, 'wedding_groom_photo_v1');
+  loadOne('bridePhoto',  'bride-ph', brideURL, 'wedding_bride_photo_v1');
 })();
 
 /* ── 6. Mark invitation viewed (records in Admin Panel guest list) ── */

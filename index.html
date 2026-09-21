@@ -678,12 +678,27 @@ btn.addEventListener('click', async () => {
   btn.disabled = true; btn.textContent = 'तयार गर्दै…';
 
   try {
+    // ── Build invitation URL ──────────────────────────────
+    // Include photo URLs in params so guests can see photos
+    // (marriage profile is in admin's localStorage only)
+    var groomPhoto = '';
+    var bridePhoto = '';
+    try {
+      var _m = MarriageDB.getActive() || MarriageDB.get(mid);
+      if (_m) {
+        groomPhoto = (_m.groomPhotoURL || '').trim();
+        bridePhoto = (_m.bridePhotoURL || '').trim();
+      }
+    } catch(e) {}
+
     const relPath = 'invitation.html'
       + '?guest='  + encodeURIComponent(name)
       + '&family=' + (withFamily  ? '1' : '0')
       + '&mid='    + encodeURIComponent(mid)
       + '&showWd=' + (showWedding ? '1' : '0')
-      + '&showRd=' + (showReceive ? '1' : '0');
+      + '&showRd=' + (showReceive ? '1' : '0')
+      + (groomPhoto ? '&gp=' + encodeURIComponent(groomPhoto) : '')
+      + (bridePhoto ? '&bp=' + encodeURIComponent(bridePhoto) : '');
 
     // Build absolute URL (works both with file:// and http://)
     let absURL;

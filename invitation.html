@@ -1195,6 +1195,9 @@ const _p          = new URLSearchParams(window.location.search);
 const guestName   = _p.get('guest')  ? decodeURIComponent(_p.get('guest'))  : null;
 const withFamily  = _p.get('family') === '1';
 const marriageId  = _p.get('mid')    ? decodeURIComponent(_p.get('mid'))    : '';
+// Photo URLs passed directly in URL (works for all guests, no localStorage needed)
+const urlGroomPhoto = _p.get('gp') ? decodeURIComponent(_p.get('gp')) : '';
+const urlBridePhoto = _p.get('bp') ? decodeURIComponent(_p.get('bp')) : '';
 
 // Visibility: showWd/showRd (new), or legacy wd/rd, or direct-open (show both)
 let showWedding, showReception;
@@ -1415,8 +1418,13 @@ function setHTML(id, html) {
     tryNext();
   }
 
-  var groomURL = (M && M.groomPhotoURL) ? String(M.groomPhotoURL).trim() : '';
-  var brideURL = (M && M.bridePhotoURL) ? String(M.bridePhotoURL).trim() : '';
+  // Use URL params first (passed from index.html, work for all guests)
+  // Fall back to marriage profile (only available on admin's device)
+  // Fall back to localStorage base64 (only on admin's device)
+  var groomURL = urlGroomPhoto
+    || ((M && M.groomPhotoURL) ? String(M.groomPhotoURL).trim() : '');
+  var brideURL = urlBridePhoto
+    || ((M && M.bridePhotoURL) ? String(M.bridePhotoURL).trim() : '');
 
   loadOne('groomPhoto', 'groom-ph', groomURL, 'wedding_groom_photo_v1');
   loadOne('bridePhoto',  'bride-ph', brideURL, 'wedding_bride_photo_v1');

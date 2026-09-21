@@ -1,0 +1,760 @@
+﻿<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>शुभ विवाह — प्रजेम्स ❤ पुजा</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<!-- Devanagari fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@300;400;500;600;700;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet"/>
+<!-- Ranjana Lipi — Noto Sans Devanagari as primary, Siddhanta as Ranjana-style fallback -->
+<style>
+@font-face{
+  font-family:'RanjanaDisplay';
+  src:url('https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts/hinted-static/NotoSerifDevanagari/NotoSerifDevanagari-Bold.ttf') format('truetype');
+  font-display:swap;
+}
+/* True Ranjana Lipi via Google Noto Serif Devanagari Bold as closest match */
+</style>
+
+<style>
+/* ══════════════════════════════
+   RESET & TOKENS
+══════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --cream:#fdf6e9;--cream2:#f5e8cc;--cream3:#ede0b8;--ivory:#faf3e0;
+  --gold:#b8860b;--gold2:#d4a017;--gold3:#f0c040;--gold4:#fae08a;
+  --maroon:#7b1c2e;--maroon2:#5a0f1e;--maroon3:#9e2535;
+  --red:#b83232;--white:#ffffff;
+  --text1:#2c1a0e;--text2:#5c3a1e;--text3:#8b6040;
+  --fh:'Tiro Devanagari Hindi','Noto Serif Devanagari',serif;
+  --fb:'Noto Serif Devanagari',serif;
+  --fu:'Noto Sans Devanagari',sans-serif;
+}
+body{background:var(--cream);font-family:var(--fb);color:var(--text1);min-height:100vh;overflow-x:hidden}
+
+/* ══ PETALS ══ */
+#petals{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.petal{position:absolute;opacity:0;animation:pfll linear infinite}
+@keyframes pfll{
+  0%  {opacity:0;transform:translateY(-20px) rotate(0deg) scale(.8)}
+  8%  {opacity:.55}
+  90% {opacity:.2}
+  100%{opacity:0;transform:translateY(105vh) rotate(800deg) scale(1.1)}
+}
+
+/* ══ OUTER BORDER ══ */
+.outer-border{
+  position:fixed;inset:8px;pointer-events:none;z-index:1;
+  border:1px solid rgba(184,134,11,.3);border-radius:4px;
+}
+.outer-border::after{
+  content:'';position:absolute;inset:5px;
+  border:1px solid rgba(184,134,11,.15);border-radius:2px;
+}
+
+/* ══ TOP STRIP ══ */
+.top-strip{
+  position:relative;z-index:10;width:100%;
+  background:var(--maroon2);padding:10px 20px;text-align:center;
+  animation:slideDown .7s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.top-strip p{font-family:var(--fb);font-size:.82rem;color:var(--gold3);letter-spacing:.12em;line-height:1.7}
+
+/* ══ PAGE ══ */
+.page{
+  position:relative;z-index:2;
+  min-height:calc(100vh - 41px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 20px 60px;
+}
+
+/* ══ MANDALA ══ */
+.mandala-wrap{
+  width:min(200px,50vw);height:min(200px,50vw);
+  margin-bottom:-16px;opacity:.15;
+  animation:mspin 80s linear infinite, fadeIn .6s ease .3s both;
+}
+@keyframes mspin{to{transform:rotate(360deg)}}
+.mandala-wrap svg{width:100%;height:100%}
+
+/* ══ CARD — entrance animation ══ */
+.card{
+  background:var(--white);
+  border-radius:3px;
+  box-shadow:0 20px 70px rgba(90,15,30,.14),0 4px 20px rgba(184,134,11,.1);
+  padding:52px 44px 48px;
+  max-width:500px;width:100%;
+  text-align:center;
+  position:relative;overflow:hidden;
+  /* entrance */
+  animation:cardIn .9s cubic-bezier(.34,1.2,.64,1) .4s both;
+}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(40px) scale(.97)}
+  to  {opacity:1;transform:translateY(0)    scale(1)}
+}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--maroon2),var(--gold2),var(--maroon2))}
+.card::after {content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--maroon2),var(--gold2),var(--maroon2))}
+.card-left-band,.card-right-band{position:absolute;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--maroon2),var(--gold2),var(--maroon2))}
+.card-left-band{left:0}.card-right-band{right:0}
+
+/* ══ CORNER ORNAMENTS ══ */
+.c-orn{position:absolute;width:50px;height:50px;opacity:0;animation:ornIn .6s ease forwards}
+.c-orn.tl{top:14px;left:14px; animation-delay:.8s}
+.c-orn.tr{top:14px;right:14px;transform:scaleX(-1); animation-delay:.9s}
+.c-orn.bl{bottom:14px;left:14px;transform:scaleY(-1); animation-delay:1.0s}
+.c-orn.br{bottom:14px;right:14px;transform:scale(-1,-1); animation-delay:1.1s}
+@keyframes ornIn{from{opacity:0;transform:scale(0.5)}to{opacity:.6;transform:scale(1)}}
+/* override transform for tr/bl/br after animation completes */
+.c-orn.tr{animation-name:ornInFlipX}
+.c-orn.bl{animation-name:ornInFlipY}
+.c-orn.br{animation-name:ornInFlipXY}
+@keyframes ornInFlipX {from{opacity:0}to{opacity:.6;transform:scaleX(-1)}}
+@keyframes ornInFlipY {from{opacity:0}to{opacity:.6;transform:scaleY(-1)}}
+@keyframes ornInFlipXY{from{opacity:0}to{opacity:.6;transform:scale(-1,-1)}}
+
+/* ══ TORAN ══ */
+.toran{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:16px;
+  opacity:0;animation:fadeIn .5s ease .7s both}
+.tl{width:14px;height:24px;background:var(--maroon2);border-radius:50% 50% 38% 38%;opacity:.75;animation:tsway 3.2s ease-in-out infinite}
+.tl:nth-child(even){background:var(--gold2);animation-delay:.45s;opacity:.8}
+.tl:nth-child(3n){height:18px;animation-delay:.9s}
+@keyframes tsway{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+
+/* ══ GANESH ══ */
+.ganesh{font-family:var(--fb);font-size:.83rem;color:var(--maroon);letter-spacing:.07em;
+  margin-bottom:20px;opacity:0;animation:fadeIn .5s ease .85s both;line-height:1.8}
+
+/* ══ SHUBH VIVAH ══ */
+.shubh{font-family:var(--fh);font-size:clamp(2rem,7vw,2.8rem);color:var(--maroon2);
+  letter-spacing:.05em;line-height:1.2;margin-bottom:6px;
+  opacity:0;animation:fadeUp .6s ease .95s both}
+.shubh-bar{width:110px;height:2px;background:linear-gradient(90deg,transparent,var(--gold2),transparent);
+  margin:0 auto 20px;opacity:0;animation:barGrow .5s ease 1.1s both}
+@keyframes barGrow{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
+
+/* ══ NAMES BLOCK ══ */
+.names-block{display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:22px}
+.role-lbl{font-family:var(--fu);font-size:.72rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:1px;opacity:0;animation:fadeIn .4s ease var(--nd) both}
+.nm{font-family:var(--fh);font-size:clamp(1.3rem,4.5vw,1.75rem);color:var(--text1);line-height:1.3;
+  opacity:0;animation:fadeUp .5s ease var(--nd) both}
+.names-block .role-lbl:nth-child(1){--nd:1.2s}
+.names-block .nm:nth-child(2)      {--nd:1.3s}
+.names-block .hrt:nth-child(3)     {animation-delay:1.42s}
+.names-block .role-lbl:nth-child(4){--nd:1.45s}
+.names-block .nm:nth-child(5)      {--nd:1.55s}
+
+/* heart */
+.hrt{font-size:clamp(1.3rem,4vw,1.7rem);color:var(--maroon3);
+  animation:hb 1.7s ease-in-out infinite, fadeIn .4s ease 1.42s both;
+  line-height:1.6;opacity:0}
+@keyframes hb{0%,100%{transform:scale(1)}14%{transform:scale(1.25)}28%{transform:scale(1)}42%{transform:scale(1.12)}70%{transform:scale(1)}}
+
+/* inline heart for footer */
+.inline-hrt{
+  display:inline-block;
+  animation:hb 1.7s ease-in-out infinite;
+  color:var(--maroon3);
+}
+
+/* ══ DATE CHIP ══ */
+.date-chip{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  color:var(--gold3);border-radius:50px;padding:10px 26px;
+  font-family:var(--fu);font-size:.88rem;font-weight:600;letter-spacing:.04em;
+  margin-bottom:32px;box-shadow:0 4px 16px rgba(90,15,30,.28);
+  opacity:0;animation:fadeUp .5s ease 1.65s both;
+}
+
+/* ══ RANJANA QUOTE ══ */
+.ranjana-quote{
+  margin:0 0 24px;padding:16px 18px;
+  background:rgba(184,134,11,.06);
+  border:1px solid rgba(184,134,11,.22);
+  border-radius:8px;
+  font-family:'Noto Serif Devanagari',serif;
+  font-weight:700;
+  font-size:clamp(.85rem,2.5vw,.98rem);
+  color:var(--maroon2);
+  letter-spacing:.04em;
+  line-height:2;
+  text-align:center;
+  font-style:italic;
+  opacity:0;
+  animation:fadeIn .6s ease 1.8s both;
+  position:relative;
+}
+.ranjana-quote::before{
+  content:'"';
+  font-size:2rem;color:var(--gold2);line-height:0;
+  vertical-align:-.4em;margin-right:3px;font-style:normal;
+}
+.ranjana-quote::after{
+  content:'"';
+  font-size:2rem;color:var(--gold2);line-height:0;
+  vertical-align:-.4em;margin-left:3px;font-style:normal;
+}
+/* Ranjana-style label */
+.ranjana-label{
+  display:block;font-family:var(--fu);font-size:.65rem;
+  color:var(--text3);letter-spacing:.14em;margin-top:6px;
+  opacity:.7;font-style:normal;
+}
+
+/* ══ DIVIDER ══ */
+.dv{display:flex;align-items:center;gap:10px;margin:0 auto 24px;max-width:280px;
+  opacity:0;animation:fadeIn .4s ease 1.75s both}
+.dv::before,.dv::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+.dv span{color:var(--gold2);font-size:1rem}
+
+/* ══ INPUT & BUTTON ══ */
+.inp-section{opacity:0;animation:fadeUp .5s ease 1.9s both}
+.inp-lbl{font-family:var(--fu);font-size:.78rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;display:block}
+.inp{
+  width:100%;padding:14px 18px;
+  border:1.5px solid var(--cream3);border-radius:10px;
+  font-family:var(--fb);font-size:1.05rem;color:var(--text1);
+  background:var(--ivory);outline:none;text-align:center;
+  transition:border .25s,box-shadow .25s;
+}
+.inp:focus{border-color:var(--gold2);box-shadow:0 0 0 3px rgba(212,160,23,.16)}
+.inp::placeholder{color:var(--text3);opacity:.65}
+.inp-err{font-family:var(--fu);font-size:.8rem;color:var(--red);min-height:20px;margin:6px 0 8px;display:block}
+.btn-gen{
+  width:100%;padding:15px;
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  color:var(--gold3);border:none;border-radius:10px;
+  font-family:var(--fu);font-size:1rem;font-weight:700;letter-spacing:.06em;
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 6px 22px rgba(90,15,30,.3);
+}
+.btn-gen:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(90,15,30,.38)}
+.btn-gen:active{transform:translateY(0)}
+.btn-gen:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.hint{font-family:var(--fu);font-size:.76rem;color:var(--text3);margin-top:11px;font-style:italic}
+
+/* ══ FOOTER ROW ══ */
+.lotus-row{display:flex;justify-content:center;gap:14px;margin:16px 0 10px;opacity:0;animation:fadeIn .5s ease 2s both}
+.lotus-row span{font-size:1.3rem}
+.ftr-links{margin-top:0;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+  opacity:0;animation:fadeIn .5s ease 2.05s both}
+.ftr-a{font-family:var(--fu);font-size:.78rem;color:var(--maroon);text-decoration:none;
+  padding:6px 14px;border:1px solid var(--cream3);border-radius:20px;transition:all .2s}
+.ftr-a:hover{background:var(--maroon);color:var(--gold3);border-color:var(--maroon)}
+
+/* ══ KEYFRAMES shared ══ */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ REDUCED MOTION ══ */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-delay:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* ══ DATE SELECTOR — dual checkboxes ══ */
+.date-select-wrap{
+  margin-bottom:12px;
+}
+.date-select-wrap .f-label-sm{
+  font-family:var(--fu);font-size:.76rem;color:var(--text3);
+  letter-spacing:.12em;text-transform:uppercase;
+  display:block;margin-bottom:8px;
+}
+.date-check-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 14px;
+  border:1.5px solid var(--cream3);border-radius:9px;
+  background:var(--ivory);cursor:pointer;
+  transition:border .22s,background .22s;
+  margin-bottom:8px;
+}
+.date-check-item:has(input:checked){
+  border-color:var(--gold2);
+  background:rgba(212,160,23,.09);
+}
+.date-check-item input[type=checkbox]{
+  accent-color:var(--maroon2);
+  width:17px;height:17px;flex-shrink:0;cursor:pointer;
+}
+.dci-content{display:flex;align-items:center;gap:10px;flex:1}
+.dci-icon{font-size:1.3rem;flex-shrink:0}
+.dci-text{display:flex;flex-direction:column;gap:1px;text-align:left}
+.dci-text strong{font-family:var(--fb);font-size:.92rem;color:var(--text1);font-weight:600}
+.dci-sub{font-family:var(--fu);font-size:.74rem;color:var(--text3)}
+
+/* ══ FAMILY TOGGLE ══ */
+.family-toggle-wrap{
+  margin-bottom:14px;
+}
+.family-toggle{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 16px;
+  border:1.5px solid var(--cream3);border-radius:9px;
+  background:var(--ivory);cursor:pointer;
+  transition:border .22s,background .22s;
+  user-select:none;
+}
+.family-toggle:has(input:checked){
+  border-color:var(--gold2);
+  background:rgba(212,160,23,.08);
+}
+.family-toggle input[type=checkbox]{
+  accent-color:var(--maroon2);
+  width:18px;height:18px;flex-shrink:0;cursor:pointer;
+}
+.family-toggle-label{
+  font-family:var(--fb);font-size:.95rem;color:var(--text1);
+}
+.family-toggle-sub{
+  font-family:var(--fu);font-size:.72rem;color:var(--text3);margin-top:1px;display:block;
+}
+
+/* ══ GENERATED LINK BOX ══ */
+.link-box{
+  display:none;
+  margin-top:18px;
+  background:linear-gradient(135deg,rgba(90,15,30,.06),rgba(184,134,11,.06));
+  border:1.5px solid var(--gold2);border-radius:12px;
+  padding:18px 16px;text-align:center;
+  animation:fadeUp .45s ease both;
+}
+.link-box-title{
+  font-family:var(--fb);font-size:.88rem;color:var(--maroon2);
+  font-weight:600;margin-bottom:10px;
+}
+.link-url{
+  font-family:var(--fu);font-size:.72rem;color:var(--text3);
+  word-break:break-all;background:var(--ivory);
+  border:1px solid var(--cream3);border-radius:7px;
+  padding:8px 10px;margin-bottom:10px;
+  user-select:all;cursor:text;line-height:1.6;display:block;
+}
+.btn-copy{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;
+  background:linear-gradient(135deg,var(--maroon2),var(--maroon));
+  color:var(--gold3);border:none;border-radius:9px;
+  font-family:var(--fu);font-size:.88rem;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 14px rgba(90,15,30,.25);width:100%;justify-content:center;
+}
+.btn-copy:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(90,15,30,.32)}
+.btn-copy.copied{background:linear-gradient(135deg,#1e7e34,#27ae60)}
+.copy-feedback{
+  font-family:var(--fu);font-size:.78rem;color:var(--green,#1e7e34);
+  margin-top:8px;min-height:18px;font-weight:600;
+}
+.btn-open-inv{
+  display:inline-block;margin-top:8px;
+  padding:9px 18px;
+  background:var(--cream2);color:var(--maroon2);
+  border:1px solid var(--cream3);border-radius:9px;
+  font-family:var(--fu);font-size:.82rem;font-weight:600;
+  cursor:pointer;text-decoration:none;transition:all .2s;width:100%;text-align:center;
+}
+.btn-open-inv:hover{background:var(--cream3)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:520px){
+  .card{padding:36px 18px 36px}
+  .shubh{font-size:1.85rem}
+  .nm{font-size:1.2rem}
+  .outer-border{inset:4px}
+}
+</style>
+</head>
+<body>
+<div id="petals"></div>
+<div class="outer-border"></div>
+
+<div class="top-strip">
+  <p>॥ श्री गणेशाय नमः ॥ &nbsp;·&nbsp; शुभ विवाह निमन्त्रणा</p>
+</div>
+
+<div class="page">
+
+  <!-- Mandala -->
+  <div class="mandala-wrap" aria-hidden="true">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#b8860b">
+      <circle cx="100" cy="100" r="92" stroke-width="1.2"/>
+      <circle cx="100" cy="100" r="74" stroke-width=".8"/>
+      <circle cx="100" cy="100" r="56" stroke-width=".8"/>
+      <circle cx="100" cy="100" r="38" stroke-width=".8"/>
+      <circle cx="100" cy="100" r="20" stroke-width="1"/>
+      <circle cx="100" cy="100" r="6" fill="#b8860b" stroke="none"/>
+      <g stroke-width="1">
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" opacity=".8"/>
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" transform="rotate(45 100 100)" opacity=".8"/>
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" transform="rotate(90 100 100)" opacity=".8"/>
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" transform="rotate(135 100 100)" opacity=".8"/>
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" transform="rotate(180 100 100)" opacity=".8"/>
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" transform="rotate(225 100 100)" opacity=".8"/>
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" transform="rotate(270 100 100)" opacity=".8"/>
+        <path d="M100 8 Q118 54 100 100 Q82 54 100 8Z" transform="rotate(315 100 100)" opacity=".8"/>
+      </g>
+      <g fill="#b8860b" stroke="none">
+        <circle cx="100" cy="9" r="2.5"/>
+        <circle cx="100" cy="9" r="2.5" transform="rotate(45 100 100)"/>
+        <circle cx="100" cy="9" r="2.5" transform="rotate(90 100 100)"/>
+        <circle cx="100" cy="9" r="2.5" transform="rotate(135 100 100)"/>
+        <circle cx="100" cy="9" r="2.5" transform="rotate(180 100 100)"/>
+        <circle cx="100" cy="9" r="2.5" transform="rotate(225 100 100)"/>
+        <circle cx="100" cy="9" r="2.5" transform="rotate(270 100 100)"/>
+        <circle cx="100" cy="9" r="2.5" transform="rotate(315 100 100)"/>
+      </g>
+      <g stroke-width=".7" opacity=".6">
+        <path d="M100 42 L108 74 L100 80 L92 74Z"/>
+        <path d="M100 42 L108 74 L100 80 L92 74Z" transform="rotate(45 100 100)"/>
+        <path d="M100 42 L108 74 L100 80 L92 74Z" transform="rotate(90 100 100)"/>
+        <path d="M100 42 L108 74 L100 80 L92 74Z" transform="rotate(135 100 100)"/>
+        <path d="M100 42 L108 74 L100 80 L92 74Z" transform="rotate(180 100 100)"/>
+        <path d="M100 42 L108 74 L100 80 L92 74Z" transform="rotate(225 100 100)"/>
+        <path d="M100 42 L108 74 L100 80 L92 74Z" transform="rotate(270 100 100)"/>
+        <path d="M100 42 L108 74 L100 80 L92 74Z" transform="rotate(315 100 100)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="card-left-band"></div>
+    <div class="card-right-band"></div>
+
+    <!-- Corner ornaments -->
+    <svg class="c-orn tl" viewBox="0 0 50 50" fill="none"><path d="M2 48 Q2 2 48 2" stroke="#b8860b" stroke-width="1.4" stroke-dasharray="3 3"/><path d="M7 48 Q7 7 48 7" stroke="#b8860b" stroke-width=".6" opacity=".45"/><circle cx="2" cy="48" r="2" fill="#b8860b"/><circle cx="48" cy="2" r="2" fill="#b8860b"/><path d="M2 2 L13 2 L2 13Z" fill="#b8860b" opacity=".5"/></svg>
+    <svg class="c-orn tr" viewBox="0 0 50 50" fill="none"><path d="M2 48 Q2 2 48 2" stroke="#b8860b" stroke-width="1.4" stroke-dasharray="3 3"/><path d="M7 48 Q7 7 48 7" stroke="#b8860b" stroke-width=".6" opacity=".45"/><circle cx="2" cy="48" r="2" fill="#b8860b"/><circle cx="48" cy="2" r="2" fill="#b8860b"/><path d="M2 2 L13 2 L2 13Z" fill="#b8860b" opacity=".5"/></svg>
+    <svg class="c-orn bl" viewBox="0 0 50 50" fill="none"><path d="M2 48 Q2 2 48 2" stroke="#b8860b" stroke-width="1.4" stroke-dasharray="3 3"/><path d="M7 48 Q7 7 48 7" stroke="#b8860b" stroke-width=".6" opacity=".45"/><circle cx="2" cy="48" r="2" fill="#b8860b"/><circle cx="48" cy="2" r="2" fill="#b8860b"/><path d="M2 2 L13 2 L2 13Z" fill="#b8860b" opacity=".5"/></svg>
+    <svg class="c-orn br" viewBox="0 0 50 50" fill="none"><path d="M2 48 Q2 2 48 2" stroke="#b8860b" stroke-width="1.4" stroke-dasharray="3 3"/><path d="M7 48 Q7 7 48 7" stroke="#b8860b" stroke-width=".6" opacity=".45"/><circle cx="2" cy="48" r="2" fill="#b8860b"/><circle cx="48" cy="2" r="2" fill="#b8860b"/><path d="M2 2 L13 2 L2 13Z" fill="#b8860b" opacity=".5"/></svg>
+
+    <!-- Toran -->
+    <div class="toran" aria-hidden="true">
+      <div class="tl"></div><div class="tl"></div><div class="tl"></div>
+      <div class="tl"></div><div class="tl"></div><div class="tl"></div>
+      <div class="tl"></div><div class="tl"></div><div class="tl"></div>
+      <div class="tl"></div><div class="tl"></div>
+    </div>
+
+    <p class="ganesh">॥ श्री गणेशाय नमः ॥</p>
+
+    <h1 class="shubh">शुभ विवाह</h1>
+    <div class="shubh-bar"></div>
+
+    <!-- Names — वर first -->
+    <div class="names-block">
+      <span class="role-lbl">वर</span>
+      <span class="nm" id="idx-groom-name">प्रजेम्स श्रेष्ठ</span>
+      <span class="hrt">❤️</span>
+      <span class="role-lbl">वधू</span>
+      <span class="nm" id="idx-bride-name">पुजा श्रेष्ठ</span>
+    </div>
+
+    <!-- Date chip -->
+    <div class="date-chip" id="idx-date-chip">
+      <span>🗓</span>
+      <span id="idx-date-text">मंसिर १९, २०८३ &nbsp;·&nbsp; बिहान ९:०० बजे</span>
+    </div>
+
+    <!-- Ranjana Lipi Quote -->
+    <div class="ranjana-quote" id="idx-quote" lang="ne">
+      प्रेम, संस्कार र साथले जीवनको नयाँ यात्रा शुभ बनोस्।
+    </div>
+
+    <div class="dv"><span>❧</span></div>
+
+    <!-- Input section -->
+    <div class="inp-section">
+      <label class="inp-lbl" for="gName">अतिथिको नाम लेख्नुहोस्</label>
+      <input type="text" id="gName" class="inp"
+        placeholder="उदा: श्री राम बहादुर श्रेष्ठ"
+        autocomplete="off" maxlength="80"/>
+      <span class="inp-err" id="gErr" role="alert"></span>
+
+      <!-- Date selection — dual checkboxes -->
+      <div class="date-select-wrap">
+        <span class="f-label-sm">मिति छान्नुहोस् (एक वा दुवै)</span>
+
+        <label class="date-check-item" id="lblWedding">
+          <input type="checkbox" id="chkWedding" name="invDates" value="wedding"/>
+          <span class="dci-content">
+            <span class="dci-icon">🕯️</span>
+            <span class="dci-text">
+              <strong>शुभ विवाह मिति</strong>
+              <span class="dci-sub" id="idx-wedding-date-label">मंसिर १९, २०८३ — बिहान ९:०० बजे</span>
+            </span>
+          </span>
+        </label>
+
+        <label class="date-check-item" id="lblReception">
+          <input type="checkbox" id="chkReception" name="invDates" value="reception"/>
+          <span class="dci-content">
+            <span class="dci-icon">🎊</span>
+            <span class="dci-text">
+              <strong>प्रतिभोज मिति</strong>
+              <span class="dci-sub" id="idx-reception-date-label">मंसिर २०, २०८३ — दिउँसो २:०० बजे</span>
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <!-- परिवार सहित toggle -->
+      <div class="family-toggle-wrap">
+        <label class="family-toggle">
+          <input type="checkbox" id="chkFamily"/>
+          <span>
+            <span class="family-toggle-label">परिवार सहित</span>
+            <span class="family-toggle-sub">निमन्त्रणा कार्डमा "परिवार सहित" थपिनेछ</span>
+          </span>
+        </label>
+      </div>
+
+      <button class="btn-gen" id="btnGen">निमन्त्रणा तयार गर्नुहोस् →</button>
+      <p class="hint">नाम र मिति छानेर बटन थिच्नुहोस् — व्यक्तिगत निमन्त्रणा कार्ड खुल्नेछ</p>
+
+      <!-- Generated link box — shown after invite is created -->
+      <div class="link-box" id="linkBox">
+        <p class="link-box-title">✅ निमन्त्रणा तयार भयो!</p>
+        <span class="link-url" id="linkUrl"></span>
+        <button class="btn-copy" id="btnCopy">📋 निमन्त्रणा लिंक कपी गर्नुहोस्</button>
+        <div class="copy-feedback" id="copyFeedback"></div>
+        <a class="btn-open-inv" id="btnOpenInv" href="#" target="_blank">
+          → निमन्त्रणा खोल्नुहोस्
+        </a>
+      </div>
+    </div>
+
+    <div class="lotus-row" aria-hidden="true">
+      <span>🪷</span><span>🪔</span><span>✦</span><span>🪔</span><span>🪷</span>
+    </div>
+
+    <div class="ftr-links">
+      <a href="save-photos.html" class="ftr-a">📸 फोटो सेटअप</a>
+      <a href="admin-panel.html" class="ftr-a">⚙ व्यवस्थापक</a>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="db.js"></script>
+<script src="marriages.js"></script>
+<script>
+"use strict";
+/*
+ * ════════════════════════════════════════════════════════
+ *  INDEX.HTML  —  Main/Landing Page
+ *
+ *  DATA FLOW:
+ *    Admin Panel → MarriageDB (localStorage)
+ *                       ↓
+ *    index.html reads active marriage profile
+ *    and shows: couple names, dates, venue
+ *                       ↓
+ *    User enters guest name + selects events
+ *                       ↓
+ *    invitation.html?guest=&family=&mid=&showWd=&showRd=
+ *
+ *  IMPORTANT: all displayed content (names, dates) comes
+ *  from MarriageDB.getActive() — the profile set as active
+ *  in the Admin Panel.
+ * ════════════════════════════════════════════════════════
+ */
+
+/* ─── Load active marriage profile ─── */
+let _activeMarriage = null;
+try {
+  _activeMarriage = MarriageDB.getActive() || MarriageDB.seedIfEmpty();
+} catch(e) {}
+const M = _activeMarriage; // shorthand
+
+/* ─── Populate page from marriage profile ─── */
+(function populateFromProfile() {
+  if (!M) return;
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el && val) el.textContent = val;
+  }
+
+  // Couple names
+  setText('idx-groom-name', M.groomName);
+  setText('idx-bride-name', M.brideName);
+
+  // Date chip (hero area)
+  if (M.weddingDateNepali) {
+    setText('idx-date-text', M.weddingDateNepali + (M.weddingTime ? ' · ' + M.weddingTime : ''));
+  }
+
+  // Checkbox date labels — show what admin configured
+  if (M.weddingDateNepali) {
+    setText('idx-wedding-date-label',
+      M.weddingDateNepali + (M.weddingTime ? ' — ' + M.weddingTime : ''));
+  }
+  if (M.receptionDateNepali) {
+    setText('idx-reception-date-label',
+      M.receptionDateNepali + (M.receptionTime ? ' — ' + M.receptionTime : ''));
+  }
+
+  // Quote
+  if (M.quote) setText('idx-quote', M.quote);
+
+  // Page title
+  if (M.groomName && M.brideName) {
+    document.title = 'शुभ विवाह — ' + M.groomName + ' र ' + M.brideName;
+  }
+})();
+
+/* ─── Petals (decorative, no data dependency) ─── */
+(function spawnPetals() {
+  const bg   = document.getElementById('petals');
+  if (!bg) return;
+  const cols = ['#b8860b','#d4a017','#f0c040','#7b1c2e','#9e2535','#f5e8cc','#fae08a'];
+  const n    = window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 0
+             : (window.innerWidth < 600 ? 14 : 26);
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement('div'); p.className = 'petal';
+    const s = Math.random() * 9 + 6;
+    p.style.cssText = 'left:' + (Math.random()*100) + '%;width:' + s + 'px;height:' + s + 'px;'
+      + 'background:' + cols[Math.floor(Math.random() * cols.length)] + ';'
+      + 'animation-duration:' + (Math.random()*13+9) + 's;'
+      + 'animation-delay:'    + (Math.random()*13)   + 's;'
+      + 'border-radius:'      + (Math.random() > .5 ? '50% 0' : '50%');
+    bg.appendChild(p);
+  }
+})();
+
+/* ─── Generate invitation ─── */
+const inp = document.getElementById('gName');
+const err = document.getElementById('gErr');
+const btn = document.getElementById('btnGen');
+
+inp.addEventListener('input',   () => { err.textContent = ''; inp.style.borderColor = ''; });
+inp.addEventListener('keydown', e  => { if (e.key === 'Enter') btn.click(); });
+
+btn.addEventListener('click', async () => {
+  err.textContent = ''; inp.style.borderColor = '';
+
+  const name = inp.value.trim();
+  if (!name) {
+    err.textContent = 'कृपया अतिथिको नाम लेख्नुहोस्।';
+    inp.style.borderColor = '#b83232'; inp.focus(); return;
+  }
+  if (name.length < 2) {
+    err.textContent = 'नाम कम्तीमा २ अक्षर हुनुपर्छ।'; inp.focus(); return;
+  }
+
+  // Read user selections
+  const withFamily  = document.getElementById('chkFamily').checked;
+  const showWedding = document.getElementById('chkWedding').checked;
+  const showReceive = document.getElementById('chkReception').checked;
+
+  // Get marriage ID — MUST be non-empty for guest to appear in admin panel
+  let mid = '';
+  try {
+    // Ensure we always have a valid active marriage
+    let marriage = MarriageDB.getActive();
+    if (!marriage) {
+      // No active marriage set — use first available or create default
+      const all = MarriageDB.getAll().filter(m => !m.archived);
+      if (all.length > 0) {
+        marriage = MarriageDB.get(all[0].marriageId);
+        MarriageDB.setActive(all[0].marriageId); // also set it active
+      } else {
+        marriage = MarriageDB.seedIfEmpty();
+        MarriageDB.setActive(marriage.marriageId);
+      }
+    }
+    mid = marriage ? marriage.marriageId : '';
+  } catch(e) { /* fallback — mid stays '' */ }
+
+  if (!mid) {
+    err.textContent = 'विवाह प्रोफाइल भेटिएन। Admin Panel मा विवाह थप्नुहोस्।';
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'तयार गर्दै…';
+
+  try {
+    const relPath = 'invitation.html'
+      + '?guest='  + encodeURIComponent(name)
+      + '&family=' + (withFamily  ? '1' : '0')
+      + '&mid='    + encodeURIComponent(mid)
+      + '&showWd=' + (showWedding ? '1' : '0')
+      + '&showRd=' + (showReceive ? '1' : '0');
+
+    // Build absolute URL (works both with file:// and http://)
+    let absURL;
+    try {
+      absURL = new URL(relPath, window.location.href).href;
+    } catch(e) {
+      absURL = relPath; // fallback to relative
+    }
+
+    // Save directly to GuestDBMulti with the confirmed marriageId
+    // (bypass GuestDB shim entirely to avoid any resolution ambiguity)
+    await GuestDBMulti.addGuest(mid, name, {
+      withFamily,
+      showWedding,
+      showReception: showReceive,
+      invitationURL: absURL,
+    });
+
+    showLinkBox(absURL, relPath);
+    btn.disabled = false;
+    btn.textContent = 'निमन्त्रणा तयार गर्नुहोस् →';
+
+  } catch(saveErr) {
+    console.error('Guest save error:', saveErr);
+    err.textContent = 'समस्या भयो: ' + (saveErr.message || 'पुनः प्रयास गर्नुहोस्।');
+    btn.disabled = false; btn.textContent = 'निमन्त्रणा तयार गर्नुहोस् →';
+  }
+});
+
+/* ─── Show generated link with copy button ─── */
+function showLinkBox(absURL, relPath) {
+  const box      = document.getElementById('linkBox');
+  const urlEl    = document.getElementById('linkUrl');
+  const copyBtn  = document.getElementById('btnCopy');
+  const feedback = document.getElementById('copyFeedback');
+  const openBtn  = document.getElementById('btnOpenInv');
+
+  urlEl.textContent    = absURL;
+  openBtn.href         = relPath;
+  box.style.display    = 'block';
+  feedback.textContent = '';
+  copyBtn.classList.remove('copied');
+  copyBtn.textContent  = '📋 निमन्त्रणा लिंक कपी गर्नुहोस्';
+
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  copyBtn.onclick = async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(absURL);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = absURL;
+        ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      copyBtn.textContent = '✓ कपी भयो!';
+      copyBtn.classList.add('copied');
+      feedback.textContent = '✓ निमन्त्रणा लिंक कपी भयो — अतिथिलाई पठाउनुहोस्।';
+      setTimeout(() => {
+        copyBtn.textContent = '📋 निमन्त्रणा लिंक कपी गर्नुहोस्';
+        copyBtn.classList.remove('copied');
+      }, 3000);
+    } catch(e) {
+      feedback.textContent = 'कपी गर्न समस्या भयो। URL म्यानुअली कपी गर्नुहोस्।';
+    }
+  };
+}
+</script>
+</body>
+</html>
